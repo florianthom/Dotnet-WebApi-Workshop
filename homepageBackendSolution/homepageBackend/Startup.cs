@@ -16,14 +16,17 @@ namespace homepageBackend
 {
     public class Startup
     {
+
+        public IConfiguration Configuration { get; }
+
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        // This method gets called by the runtime. Use this method to add services to the IoC-container.
         public void ConfigureServices(IServiceCollection services)
         {
 
@@ -35,7 +38,7 @@ namespace homepageBackend
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
@@ -43,6 +46,13 @@ namespace homepageBackend
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "homepageBackend v1"));
             }
+
+            app.Use(async (context, next) =>
+            {
+                logger.LogInformation("Middleware (MW) 1: Incoming Request");
+                await next();
+                logger.LogInformation("MW2: Outgoing Response");
+            });
 
             app.UseHttpsRedirection();
 
