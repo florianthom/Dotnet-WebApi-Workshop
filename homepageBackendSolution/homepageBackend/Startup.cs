@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using homepageBackend.Domain;
 
 namespace homepageBackend
 {
@@ -29,6 +30,34 @@ namespace homepageBackend
         // This method gets called by the runtime. Use this method to add services to the IoC-container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContextPool<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                // to make entityFramework function with identity
+                .AddEntityFrameworkStores<DataContext>();
+
+            services.AddAuthorization(options =>
+            {
+                // options.AddPolicy("EditRolePolicy",
+                //     policy => policy.RequireAssertion(context =>
+                //     context.User.IsInRole("Admin")
+                //     &&
+                //     context.User.HasClaim(claim => claim.Type == "Edit Role" && claim.Value == "true")
+                //     ||
+                //     context.User.IsInRole("Super Admin")
+                //     ));
+                // options.AddPolicy("AdminRolePolicy",
+                //     policy => policy.RequireRole("Admin"));
+            });
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequiredLength = 10;
+                options.Password.RequiredUniqueChars = 3;
+            });
+
+
+
+
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
