@@ -47,12 +47,12 @@ namespace homepageBackend
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "homepageBackend v1"));
             }
 
-            app.Use(async (context, next) =>
-            {
-                logger.LogInformation("Middleware (MW) 1: Incoming Request");
-                await next();
-                logger.LogInformation("MW2: Outgoing Response");
-            });
+            // app.Use(async (context, next) =>
+            // {
+            //     logger.LogInformation("Middleware (MW) 1: Incoming Request");
+            //     await next();
+            //     logger.LogInformation("MW2: Outgoing Response");
+            // });
 
             app.UseHttpsRedirection();
 
