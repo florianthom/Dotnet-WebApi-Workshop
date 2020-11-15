@@ -1,45 +1,60 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using homepageBackend.Contracts.V1;
+using homepageBackend.Contracts.V1.Requests;
+using homepageBackend.Contracts.V1.Responses;
 using homepageBackend.Domain;
+using homepageBackend.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace homepageBackend.Controllers
 {
     public class ProjectsController : Controller
     {
-        private List<Project> _projects;
-        public ProjectsController()
-        {
-            _projects = new List<Project>();
-
-            for (int i = 0; i < 5; i++)
-            {
-                _projects.Add(new Project{Id = Guid.NewGuid().ToString()});
-            }   
+        private readonly IProjectService _projectService;
+        public ProjectsController(IProjectService projectService)
+        { 
+            _projectService = projectService;
         }
-        
+
         [HttpGet]
         [Route(ApiRoutes.Projects.GetAll)]
         public IActionResult GetAll()
         {
-            return Ok(_projects);
+            return Ok(_projectService.GetProjects());
+        }
+        
+        [HttpGet]
+        [Route(ApiRoutes.Projects.Get)]
+        public IActionResult Get(Guid projectId)
+        {
+            var project = _projectService.GetProjectId(projectId);
+
+            if (project == null)
+                NotFound();
+            
+            return Ok(project);
         }
 
         [HttpPost]
         [Route(ApiRoutes.Projects.Create)]
-        public IActionResult Create([FromBody] Project project)
+        public IActionResult Create([FromBody] CreateProjectRequest projectRequest)
         {
-            if(string.IsNullOrEmpty(project.Id))
-                project.Id = Guid.NewGuid().ToString();
+            var project = new Project {Id = projectRequest.Id};
             
-            _projects.Add(project);
+            
+            if (project.Id == Guid.Empty)
+                project.Id = Guid.NewGuid();
+
+            _projectService.GetProjects().Add(project);
 
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
-            var locationUri = baseUrl + "/" + ApiRoutes.Projects.Get.Replace("{projectId}", project.Id);
+            var locationUri = baseUrl + "/" + ApiRoutes.Projects.Get.Replace("{projectId}", project.Id.ToString());
+
+            
+            
+            var response = new ProjectResponse {Id = project.Id};
             return Created(locationUri, project);
         }
     }

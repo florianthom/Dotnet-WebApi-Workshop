@@ -1,5 +1,6 @@
 ﻿using homepageBackend.Data;
 using homepageBackend.Domain;
+using homepageBackend.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -40,6 +41,8 @@ namespace homepageBackend.Installers
                 options.Password.RequiredLength = 10;
                 options.Password.RequiredUniqueChars = 3;
             });
+
+            services.AddSingleton<IProjectService, ProjectService>();
         }
     }
 }

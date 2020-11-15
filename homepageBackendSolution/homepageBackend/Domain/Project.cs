@@ -1,7 +1,11 @@
+using System;
+
 namespace homepageBackend.Domain
 {
     public class Project
     {
-        public string Id { get; set; }
+        public Guid Id { get; set; }
+
+        public string name { get; set; }
     }
 }
