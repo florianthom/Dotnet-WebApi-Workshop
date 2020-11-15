@@ -13,6 +13,10 @@ namespace homepageBackend.Contracts.V1
             public const string GetAll = Base + "/projects";
 
             public const string Get = Base + "/projects/{projectId}";
+            
+            public const string Update = Base + "/projects/{projectId}";
+            
+            public const string Delete = Base + "/projects/{projectId}";
 
             public const string Create = Base + "/projects";
         }

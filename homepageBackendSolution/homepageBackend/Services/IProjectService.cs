@@ -9,5 +9,9 @@ namespace homepageBackend.Services
         List<Project> GetProjects();
 
         Project GetProjectId(Guid projectId);
+
+        bool UpdateProject(Project projectToUpdate);
+
+        bool DeleteProject(Guid projectId);
     }
 }
