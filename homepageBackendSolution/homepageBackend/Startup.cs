@@ -1,5 +1,6 @@
 using homepageBackend.Data;
 using homepageBackend.Domain;
+using homepageBackend.Installers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -25,41 +26,11 @@ namespace homepageBackend
         // This method gets called by the runtime. Use this method to add services to the IoC-container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddDatabaseDeveloperPageExceptionFilter();
-
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                // to make entityFramework function with identity
-                .AddEntityFrameworkStores<DataContext>();
-
-            services.AddAuthorization(options =>
-            {
-                // options.AddPolicy("EditRolePolicy",
-                //     policy => policy.RequireAssertion(context =>
-                //     context.User.IsInRole("Admin")
-                //     &&
-                //     context.User.HasClaim(claim => claim.Type == "Edit Role" && claim.Value == "true")
-                //     ||
-                //     context.User.IsInRole("Super Admin")
-                //     ));
-                // options.AddPolicy("AdminRolePolicy",
-                //     policy => policy.RequireRole("Admin"));
-            });
-
-            services.Configure<IdentityOptions>(options =>
-            {
-                options.Password.RequiredLength = 10;
-                options.Password.RequiredUniqueChars = 3;
-            });
-
-
-            services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "homepageBackend", Version = "v1"});
-            });
+            services.InstallDb(Configuration);
+            
+            services.InstallMvc();
+            
+            services.InstallSwagger();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
