@@ -44,6 +44,10 @@ namespace homepageBackend.Services
         public async Task<bool> DeleteProjectAsync(Guid projectId)
         {
             var project = await GetProjectIdAsync(projectId);
+
+            if (project == null)
+                return false;
+            
             _dataContext.Projects.Remove(project);
             var deleted = await _dataContext.SaveChangesAsync();
             return deleted > 0;

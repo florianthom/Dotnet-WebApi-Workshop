@@ -28,7 +28,7 @@ namespace homepageBackend
         {
             services.InstallDb(Configuration);
             
-            services.InstallMvc();
+            services.InstallMvc(Configuration);
             
             services.InstallSwagger();
         }
@@ -51,13 +51,13 @@ namespace homepageBackend
             // });
 
             app.UseHttpsRedirection();
-
+            
             app.UseRouting();
 
             app.UseAuthentication();
 
             app.UseAuthorization();
-
+            
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }

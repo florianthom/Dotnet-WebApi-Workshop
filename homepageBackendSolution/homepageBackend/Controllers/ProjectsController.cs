@@ -22,7 +22,7 @@ namespace homepageBackend.Controllers
         [Route(ApiRoutes.Projects.GetAll)]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(_projectService.GetProjectsAsync());
+            return Ok(await _projectService.GetProjectsAsync());
         }
 
         [HttpGet]
@@ -60,8 +60,9 @@ namespace homepageBackend.Controllers
         {
             var deleted = await _projectService.DeleteProjectAsync(projectId);
 
+            
             if (deleted)
-                return NoContent();
+                return NoContent(); // 204
 
             return NotFound();
         }
