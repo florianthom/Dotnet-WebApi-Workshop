@@ -5,10 +5,13 @@ using homepageBackend.Contracts.V1.Requests;
 using homepageBackend.Contracts.V1.Responses;
 using homepageBackend.Domain;
 using homepageBackend.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace homepageBackend.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ProjectsController : Controller
     {
         private readonly IProjectService _projectService;

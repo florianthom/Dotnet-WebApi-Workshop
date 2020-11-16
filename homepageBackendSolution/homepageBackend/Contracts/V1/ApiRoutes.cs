@@ -20,5 +20,12 @@ namespace homepageBackend.Contracts.V1
 
             public const string Create = Base + "/projects";
         }
+
+        public static class Identity
+        {
+            public const string Login = Base + "/identity/login";
+
+            public const string Register = Base + "/identity/register";
+        }
     }
 }
