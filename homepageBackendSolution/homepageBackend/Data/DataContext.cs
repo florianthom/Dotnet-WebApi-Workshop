@@ -8,6 +8,12 @@ using homepageBackend.Domain;
 
 namespace homepageBackend.Data
 {
+    //  dotnet ef migrations add Initial --context homepageBackend.Data.DataContext -o .\Data\Migrations
+    //    - location of context and migration folder is now selected for future migration too
+    //  dotnet ef database update
+    //    - localhost:5432
+    //    - user: postgres (default)
+    //    - pw: my_simple_default
     public class DataContext: IdentityDbContext<ApplicationUser>
     {
         // public DbSet<Book> Books { get; set; }
