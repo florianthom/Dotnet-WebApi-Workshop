@@ -13,8 +13,8 @@ namespace homepageBackend.Services
 {
     public class IdentityService : IIdentityService
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly JwtSettings _jwtSettings;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public IdentityService(UserManager<ApplicationUser> userManager, JwtSettings jwtSettings)
         {
@@ -26,13 +26,11 @@ namespace homepageBackend.Services
         {
             var existingUser = await _userManager.FindByEmailAsync(email);
 
-            if (existingUser!=null)
-            {
+            if (existingUser != null)
                 return new AuthenticationResult
                 {
                     Errors = new[] {"User with this email address already exists"}
                 };
-            }
 
             var newUser = new ApplicationUser
             {
@@ -43,30 +41,55 @@ namespace homepageBackend.Services
             var createdUser = await _userManager.CreateAsync(newUser, password);
 
             if (!createdUser.Succeeded)
-            {
                 return new AuthenticationResult
                 {
                     Errors = createdUser.Errors.Select(a => a.Description)
                 };
-            }
-            
+
+            return GenerateAuthenticationResultForUser(newUser);
+        }
+
+        public async Task<AuthenticationResult> LoginAsync(string email, string password)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+                return new AuthenticationResult
+                {
+                    Errors = new[] {"User does not exist"}
+                };
+
+            var userHadValidPassword = await _userManager.CheckPasswordAsync(user, password);
+
+            if (!userHadValidPassword)
+                return new AuthenticationResult
+                {
+                    Errors = new[] {"User/password combination is wrong"}
+                };
+
+            return GenerateAuthenticationResultForUser(user);
+        }
+
+        private AuthenticationResult GenerateAuthenticationResultForUser(ApplicationUser newUser)
+        {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new []
+                Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, newUser.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Email, newUser.Email), 
-                    new Claim("id", newUser.Id), 
+                    new Claim(JwtRegisteredClaimNames.Email, newUser.Email),
+                    new Claim("id", newUser.Id)
                 }),
                 Expires = DateTime.UtcNow.AddHours(2),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials =
+                    new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            
+
             return new AuthenticationResult
             {
                 Success = true,
