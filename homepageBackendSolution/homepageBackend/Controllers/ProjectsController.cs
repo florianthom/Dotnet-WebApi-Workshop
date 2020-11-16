@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using homepageBackend.Contracts.V1;
 using homepageBackend.Contracts.V1.Requests;
 using homepageBackend.Contracts.V1.Responses;
@@ -19,16 +20,16 @@ namespace homepageBackend.Controllers
 
         [HttpGet]
         [Route(ApiRoutes.Projects.GetAll)]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok(_projectService.GetProjects());
+            return Ok(_projectService.GetProjectsAsync());
         }
 
         [HttpGet]
         [Route(ApiRoutes.Projects.Get)]
-        public IActionResult Get([FromRoute] Guid projectId)
+        public async Task<IActionResult> Get([FromRoute] Guid projectId)
         {
-            var project = _projectService.GetProjectId(projectId);
+            var project = await _projectService.GetProjectIdAsync(projectId);
 
             if (project == null)
                 NotFound();
@@ -38,7 +39,7 @@ namespace homepageBackend.Controllers
 
         [HttpPut]
         [Route(ApiRoutes.Projects.Update)]
-        public IActionResult Update([FromRoute] Guid projectId, [FromBody] UpdateProjectRequest request)
+        public async Task<IActionResult> Update([FromRoute] Guid projectId, [FromBody] UpdateProjectRequest request)
         {
             var project = new Project
             {
@@ -46,7 +47,7 @@ namespace homepageBackend.Controllers
                 name = request.Name
             };
 
-            var updated = _projectService.UpdateProject(project);
+            var updated = await _projectService.UpdateProjectAsync(project);
 
             if (updated) return Ok(project);
 
@@ -55,9 +56,9 @@ namespace homepageBackend.Controllers
 
         [HttpDelete]
         [Route(ApiRoutes.Projects.Delete)]
-        public IActionResult Delete([FromRoute] Guid projectId)
+        public async Task<IActionResult> Delete([FromRoute] Guid projectId)
         {
-            var deleted = _projectService.DeleteProject(projectId);
+            var deleted = await _projectService.DeleteProjectAsync(projectId);
 
             if (deleted)
                 return NoContent();
@@ -67,15 +68,11 @@ namespace homepageBackend.Controllers
 
         [HttpPost]
         [Route(ApiRoutes.Projects.Create)]
-        public IActionResult Create([FromBody] CreateProjectRequest projectRequest)
+        public async Task<IActionResult> Create([FromBody] CreateProjectRequest projectRequest)
         {
-            var project = new Project {Id = projectRequest.Id};
-
-
-            if (project.Id == Guid.Empty)
-                project.Id = Guid.NewGuid();
-
-            _projectService.GetProjects().Add(project);
+            var project = new Project {name = projectRequest.Name};
+            
+            await _projectService.CreateProjectAsync(project);
 
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
             var locationUri = baseUrl + "/" + ApiRoutes.Projects.Get.Replace("{projectId}", project.Id.ToString());

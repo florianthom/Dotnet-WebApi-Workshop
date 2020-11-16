@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using homepageBackend.Domain;
 
 namespace homepageBackend.Services
 {
     public interface IProjectService
     {
-        List<Project> GetProjects();
+        Task<List<Project>> GetProjectsAsync();
 
-        Project GetProjectId(Guid projectId);
+        Task<Project> GetProjectIdAsync(Guid projectId);
 
-        bool UpdateProject(Project projectToUpdate);
+        Task<bool> CreateProjectAsync(Project project);
+        
+        Task<bool> UpdateProjectAsync(Project projectToUpdate);
 
-        bool DeleteProject(Guid projectId);
+        Task<bool> DeleteProjectAsync(Guid projectId);
     }
 }

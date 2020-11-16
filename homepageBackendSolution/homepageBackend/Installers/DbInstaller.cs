@@ -14,7 +14,7 @@ namespace homepageBackend.Installers
         public static void InstallDb(this IServiceCollection services, IConfiguration Configuration)
         {
             services.AddDbContext<DataContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(Configuration.GetConnectionString("homepageBackendContextPostgre")));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -42,7 +42,9 @@ namespace homepageBackend.Installers
                 options.Password.RequiredUniqueChars = 3;
             });
 
-            services.AddSingleton<IProjectService, ProjectService>();
+            // changed to scoped because of tracking?!
+            // services.AddSingleton<IProjectService, ProjectService>();
+            services.AddScoped<IProjectService, ProjectService>();
         }
     }
 }

@@ -18,6 +18,8 @@ namespace homepageBackend.Data
         {
 
         }
+        
+        public DbSet<Project> Projects { get; set; }
 
     }
 }

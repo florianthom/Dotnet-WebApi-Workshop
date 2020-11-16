@@ -4,6 +4,6 @@ namespace homepageBackend.Contracts.V1.Requests
 {
     public class CreateProjectRequest
     {
-        public Guid Id { get; set; }
+        public string Name { get; set; }
     }
 }

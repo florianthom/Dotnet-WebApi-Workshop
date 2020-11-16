@@ -1,55 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using homepageBackend.Data;
 using homepageBackend.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace homepageBackend.Services
 {
     public class ProjectService : IProjectService
-    {
-        private readonly List<Project> _projects;
+    { 
+        private readonly DataContext _dataContext;
 
-        public ProjectService()
+        public ProjectService(DataContext dataContext)
         {
-            _projects = new List<Project>();
-
-            for (var i = 0; i < 5; i++)
-                _projects.Add(new Project
-                {
-                    Id = Guid.NewGuid(),
-                    name = "test name " + i
-                });
+            _dataContext = dataContext;
         }
 
-        public List<Project> GetProjects()
+        public async Task<List<Project>> GetProjectsAsync()
         {
-            return _projects;
+            return await _dataContext.Projects.ToListAsync();
         }
 
-        public Project GetProjectId(Guid projectId)
+        public async Task<Project> GetProjectIdAsync(Guid projectId)
         {
-            return _projects.SingleOrDefault(a => a.Id == projectId);
+            return await _dataContext.Projects.SingleOrDefaultAsync(a => a.Id == projectId);
         }
 
-        public bool UpdateProject(Project projectToUpdate)
+        public async Task<bool> CreateProjectAsync(Project project)
         {
-            var exists = GetProjectId(projectToUpdate.Id) != null;
-            if (!exists)
-                return false;
-
-            var index = _projects.FindIndex(a => a.Id == projectToUpdate.Id);
-            _projects[index] = projectToUpdate;
-            return true;
+            await _dataContext.Projects.AddAsync(project);
+            var created = await _dataContext.SaveChangesAsync();
+            return created > 0;
         }
 
-        public bool DeleteProject(Guid projectId)
+        public async Task<bool> UpdateProjectAsync(Project projectToUpdate)
         {
-            var project = GetProjectId(projectId);
+            _dataContext.Projects.Update(projectToUpdate);
+            var updated = await _dataContext.SaveChangesAsync();
+            return updated > 0;
+        }
 
-            if (project == null) return false;
-
-            _projects.Remove(project);
-            return true;
+        public async Task<bool> DeleteProjectAsync(Guid projectId)
+        {
+            var project = await GetProjectIdAsync(projectId);
+            _dataContext.Projects.Remove(project);
+            var deleted = await _dataContext.SaveChangesAsync();
+            return deleted > 0;
         }
     }
 }
