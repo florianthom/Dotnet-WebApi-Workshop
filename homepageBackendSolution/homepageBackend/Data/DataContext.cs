@@ -14,6 +14,8 @@ namespace homepageBackend.Data
     //    - localhost:5432
     //    - user: postgres (default)
     //    - pw: my_simple_default
+    //  dotnet ef migrations add "Added_UserId_InProjects"
+    //  dotnet ef database update
     public class DataContext: IdentityDbContext<ApplicationUser>
     {
         // public DbSet<Book> Books { get; set; }

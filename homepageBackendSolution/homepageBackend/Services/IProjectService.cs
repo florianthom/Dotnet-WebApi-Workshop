@@ -12,9 +12,10 @@ namespace homepageBackend.Services
         Task<Project> GetProjectIdAsync(Guid projectId);
 
         Task<bool> CreateProjectAsync(Project project);
-        
+
         Task<bool> UpdateProjectAsync(Project projectToUpdate);
 
         Task<bool> DeleteProjectAsync(Guid projectId);
+        Task<bool> UserOwnsPostAsync(Guid projectId, string userId);
     }
 }

@@ -64,7 +64,7 @@ namespace homepageBackend
             // -> in this project the jwt-authentication-scheme is registered in the MvcService (with services.AddAuthentication(/* */)
             // -> this authentication-handler/-scheme contains authentication-related actions
             // -> actions e.g.:
-            //      - decrypt the ascii-"encoding" (!=Verschlüssellung)
+            //      - decrypt the ascii-"encoding" (!=Verschluessellung)
             //      - validate the content of the jwt with the given secret
             //      - Setting the User object in HTTP Request Context
             //      - set the IsAuthenticated 

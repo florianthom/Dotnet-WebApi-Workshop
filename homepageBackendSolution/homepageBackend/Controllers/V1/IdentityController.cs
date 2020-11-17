@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace homepageBackend.Controllers
 {
     // {
-    // "email": "test2@test.com",
+    // "email": "test@test.com",
     // "password": "Test1234!!"
     // }
     public class IdentityController : Controller

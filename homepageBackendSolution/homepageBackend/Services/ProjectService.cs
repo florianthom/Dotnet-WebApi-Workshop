@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace homepageBackend.Services
 {
     public class ProjectService : IProjectService
-    { 
+    {
         private readonly DataContext _dataContext;
 
         public ProjectService(DataContext dataContext)
@@ -47,10 +47,27 @@ namespace homepageBackend.Services
 
             if (project == null)
                 return false;
-            
+
             _dataContext.Projects.Remove(project);
             var deleted = await _dataContext.SaveChangesAsync();
             return deleted > 0;
+        }
+
+        public async Task<bool> UserOwnsPostAsync(Guid projectId, string userId)
+        {
+            var project = await _dataContext.Projects.AsNoTracking().SingleOrDefaultAsync(a => a.Id == projectId);
+
+            if (project == null)
+            {
+                return false;
+            }
+
+            if (project.UserId != userId)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
