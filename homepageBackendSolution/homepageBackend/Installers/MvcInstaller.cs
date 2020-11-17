@@ -22,6 +22,9 @@ namespace homepageBackend.Installers
             
             services.AddAuthentication(a =>
                 {
+                    // enables to store the access-token in the HTTPContext.User - property
+                    // helpful to get the claims from that later in the controller
+                    // introduction: https://docs.microsoft.com/de-de/aspnet/core/security/authentication/?view=aspnetcore-5.0
                     a.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     a.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                     a.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;

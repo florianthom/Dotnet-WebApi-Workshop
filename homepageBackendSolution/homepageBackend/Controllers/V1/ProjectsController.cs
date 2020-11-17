@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using homepageBackend.Contracts.V1;
 using homepageBackend.Contracts.V1.Requests;
@@ -44,6 +45,7 @@ namespace homepageBackend.Controllers
         [Route(ApiRoutes.Projects.Update)]
         public async Task<IActionResult> Update([FromRoute] Guid projectId, [FromBody] UpdateProjectRequest request)
         {
+            HttpContext.User.Claims.Single(x => x.Type == "id");
             var project = new Project
             {
                 Id = projectId,

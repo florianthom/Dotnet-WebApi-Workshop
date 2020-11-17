@@ -54,6 +54,8 @@ namespace homepageBackend
             
             app.UseRouting();
 
+            // Setting the User object in HTTP Request Context
+            // https://www.codeproject.com/Articles/5160941/ASP-NET-CORE-Token-Authentication-and-Authorizatio
             app.UseAuthentication();
 
             app.UseAuthorization();

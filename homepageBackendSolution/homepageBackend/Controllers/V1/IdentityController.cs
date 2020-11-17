@@ -8,6 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace homepageBackend.Controllers
 {
+    // {
+    // "email": "test2@test.com",
+    // "password": "Test1234!!"
+    // }
     public class IdentityController : Controller
     {
         private readonly IIdentityService _identityService;
