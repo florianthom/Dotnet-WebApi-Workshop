@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace homepageBackend.Domain
 {
@@ -7,5 +8,12 @@ namespace homepageBackend.Domain
         public Guid Id { get; set; }
 
         public string name { get; set; }
+
+        public string UserId { get; set; }
+
+        [ForeignKey(nameof(UserId))]
+        public ApplicationUser User { get; set; }
+        
+        
     }
 }
