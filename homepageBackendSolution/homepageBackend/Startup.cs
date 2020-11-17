@@ -54,8 +54,20 @@ namespace homepageBackend
             
             app.UseRouting();
 
-            // Setting the User object in HTTP Request Context
+
             // https://www.codeproject.com/Articles/5160941/ASP-NET-CORE-Token-Authentication-and-Authorizatio
+            
+            // introduction: https://docs.microsoft.com/de-de/aspnet/core/security/authentication/?view=aspnetcore-5.0
+            // -> this authentication middleware uses internally the service: IAuthenticationService
+            // -> the authentication-service uses registered authentication-handlers
+            // -> The registered authentication handlers and their configuration options are called "schemes".
+            // -> in this project the jwt-authentication-scheme is registered in the MvcService (with services.AddAuthentication(/* */)
+            // -> this authentication-handler/-scheme contains authentication-related actions
+            // -> actions e.g.:
+            //      - decrypt the ascii-"encoding" (!=Verschlüssellung)
+            //      - validate the content of the jwt with the given secret
+            //      - Setting the User object in HTTP Request Context
+            //      - set the IsAuthenticated 
             app.UseAuthentication();
 
             app.UseAuthorization();
