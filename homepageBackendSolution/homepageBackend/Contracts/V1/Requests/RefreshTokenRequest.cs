@@ -1,6 +1,6 @@
-﻿namespace homepageBackend.Contracts.V1.Responses
+﻿namespace homepageBackend.Contracts.V1.Requests
 {
-    public class AuthSuccessResponse
+    public class RefreshTokenRequest
     {
         public string Token { get; set; }
 

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using homepageBackend.Options;
 using homepageBackend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -20,6 +21,19 @@ namespace homepageBackend.Installers
 
             services.AddScoped<IIdentityService, IdentityService>();
             
+            var tokenValidationParameters =  new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings.Secret)),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                RequireExpirationTime = false,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
+            };
+
+            services.AddSingleton(tokenValidationParameters);
+
             services.AddAuthentication(a =>
                 {
                     // enables to store the access-token in the HTTPContext.User - property
@@ -32,15 +46,7 @@ namespace homepageBackend.Installers
                 .AddJwtBearer(b =>
                 {
                     b.SaveToken = true;
-                    b.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings.Secret)),
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        RequireExpirationTime = false,
-                        ValidateLifetime = true
-                    };
+                    b.TokenValidationParameters = tokenValidationParameters;
                 });
         }
     }
