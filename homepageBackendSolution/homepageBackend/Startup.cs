@@ -36,14 +36,12 @@ namespace homepageBackend
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "homepageBackend v1"));
-            }
-
-            // app.Use(async (context, next) =>
+            
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "homepageBackend v1"));
+                
+                // app.Use(async (context, next) =>
             // {
             //     logger.LogInformation("Middleware (MW) 1: Incoming Request");
             //     await next();

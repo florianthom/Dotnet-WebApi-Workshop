@@ -15,4 +15,4 @@ WORKDIR /app
 RUN mv /build/out .
 RUN rm -r /build
 WORKDIR /app/out
-ENTRYPOINT ["dotnet", "homepageBackend.dll"]
+ENTRYPOINT ["dotnet", "homepageBackend.dll", "--urls", "https://0.0.0.0:5000"]
