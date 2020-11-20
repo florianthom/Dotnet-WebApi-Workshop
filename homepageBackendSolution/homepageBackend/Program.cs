@@ -21,6 +21,7 @@ namespace homepageBackend
         //
         // docker-compose build
         // docker-compose up
+        // https://0.0.0.0:5000/swagger/index.html
         // docker-compose down
         
         public static async Task Main(string[] args)
