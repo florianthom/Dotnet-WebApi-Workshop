@@ -32,8 +32,8 @@ namespace homepageBackend
                 var dbContext = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
                 await dbContext.Database.MigrateAsync();
             }
-
-            host.RunAsync();
+            
+            await host.RunAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
