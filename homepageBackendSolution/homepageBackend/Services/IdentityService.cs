@@ -161,7 +161,7 @@ namespace homepageBackend.Services
             _context.RefreshTokens.Update(storedRefreshToken);
             await _context.SaveChangesAsync();
 
-            // id == userid
+            // the id parameter == userid
             var user = await _userManager.FindByIdAsync(claimsPrincipal.Claims.Single(x => x.Type == "id").Value);
             return await GenerateAuthenticationResultForUserAsync(user);
         }
@@ -178,6 +178,8 @@ namespace homepageBackend.Services
                 tokenValidationParameters.ValidateLifetime = false;
                 var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var validatedToken);
 
+                // we have to check for proper secruity-algorithm since
+                // e.g. in a jwt, you can specify secruityAlgorithm: none
                 if (!IsJwtWithValidSecrurityAlgorithm(validatedToken))
                 {
                     return null;
@@ -192,7 +194,12 @@ namespace homepageBackend.Services
         }
 
         // helper method to check for proper secruity-algorithm
-        // reason: in mvc-installer we defined token but didnt specify a specific secruity-algorithm
+        // reason: (first way to describe the reason)
+        //    - in a jwt-token we can specify the SecruityAlgorithm
+        //    - it is possible to set SecruityAlgorithm to: none
+        //    - so we have to check for proper SecruityAlrotihm
+        // reason: (second way to describe the reason)
+        //    - in mvc-installer we defined token but didnt specify a specific secruity-algorithm
         private bool IsJwtWithValidSecrurityAlgorithm(SecurityToken validatedToken)
         {
             return (validatedToken is JwtSecurityToken jwtSecurityToken) &&
