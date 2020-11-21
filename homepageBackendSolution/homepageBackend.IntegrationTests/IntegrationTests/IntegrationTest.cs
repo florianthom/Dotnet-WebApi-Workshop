@@ -15,11 +15,20 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace homepageBackend.IntegrationTests
 {
+    // Intro to .net5 testing
+    // https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-5.0
     public class IntegrationTest : IDisposable
     {
-        protected readonly HttpClient TestClient;
-        protected readonly WebApplicationFactory<homepageBackend.Startup> AppFactory;
         
+        // attribute since maybe this factory needs additional configuration
+        // e.g. init data
+        //    - in that case you have to adjust the IWebHostBuilder inside the e.g. InMemoryWebApplicationFactory
+        //    - e.g. client = _factory.WithWebHostBuilder(builder => /* *).CreateClient(/* */);
+        //    - https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-5.0
+        protected readonly WebApplicationFactory<homepageBackend.Startup> AppFactory;
+        // attribute since its needed in each test
+        protected readonly HttpClient TestClient;
+
         // - this tests use xUnit
         // - xUnit.net offers 3 basic methods for setup and cleanup code
         //    - Constructor and Dispose (shared setup/cleanup code without sharing object instances)
@@ -36,6 +45,7 @@ namespace homepageBackend.IntegrationTests
         //    the cleanup code in the Dispose() method
         //
         // https://xunit.net/docs/shared-context
+        // https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-5.0
         protected IntegrationTest()
         {
             AppFactory = new InMemoryWebApplicationFactory<homepageBackend.Startup>();
