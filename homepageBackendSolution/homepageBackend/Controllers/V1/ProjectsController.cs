@@ -14,6 +14,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Query.Expressions.Internal;
 
 namespace homepageBackend.Controllers
 {
+    // this authorization attribute checks if the user is authenticated :D
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles= "Admin, Viewer")]
     public class ProjectsController : Controller
     {
