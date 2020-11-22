@@ -14,6 +14,12 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace homepageBackend.Services
 {
+    // information sources:
+    //    - https://www.youtube.com/watch?v=ARvsBUBioT0&list=PLUOequmGnXxOgmSDWU7Tl6iQTsOtyjtwU&index=11&ab_channel=NickChapsas
+    //    - https://stackoverflow.com/a/47568572/11244995
+    //    - https://jasonwatmore.com/post/2020/05/25/aspnet-core-3-api-jwt-authentication-with-refresh-tokens
+    //    - https://github.com/cornflourblue/aspnet-core-3-registration-login-api/blob/master/Controllers/UsersController.cs
+    //        - there is a website for this repo
     public class IdentityService : IIdentityService
     {
         private readonly JwtSettings _jwtSettings;

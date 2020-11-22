@@ -13,23 +13,31 @@ namespace homepageBackend.Data
     //  dotnet ef database update
     //    - localhost:5432
     //    - user: postgres (default)
-    //    - pw: my_simple_default
+    //    - pw: Florian1234
     //  dotnet ef migrations add "Added_UserId_InProjects"
     //  dotnet ef database update
-    public class DataContext: IdentityDbContext<ApplicationUser>
+    public class DataContext : IdentityDbContext<ApplicationUser>
     {
-        // public DbSet<Book> Books { get; set; }
-
-        
-        public DataContext(DbContextOptions<DataContext> options)
-            : base(options)
-        {
-
-        }
-        
         public DbSet<Project> Projects { get; set; }
+
+        public DbSet<Tag> Tags { get; set; }
+
+        public DbSet<ProjectTag> PostTags { get; set; }
 
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
+        public DataContext(DbContextOptions<DataContext> options)
+            : base(options)
+        {
+        }
+        
+        // needed to make PostTag have no id (otherwise: ef-error)
+        //    - reason: its a intermediate table
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            
+            builder.Entity<ProjectTag>().Ignore(a => a.Project).HasKey(b => new {b.ProjectId, b.TagName});
+        }
     }
 }

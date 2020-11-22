@@ -13,12 +13,23 @@ namespace homepageBackend.Contracts.V1
             public const string GetAll = Base + "/projects";
 
             public const string Get = Base + "/projects/{projectId}";
-            
+
             public const string Update = Base + "/projects/{projectId}";
-            
+
             public const string Delete = Base + "/projects/{projectId}";
 
             public const string Create = Base + "/projects";
+        }
+
+        public static class Tags
+        {
+            public const string GetAll = Base + "/tags";
+
+            public const string Get = Base + "/tags/{tagName}";
+
+            public const string Create = Base + "/tags";
+
+            public const string Delete = Base + "/tags/{tagName}";
         }
 
         public static class Identity
@@ -26,7 +37,7 @@ namespace homepageBackend.Contracts.V1
             public const string Login = Base + "/identity/login";
 
             public const string Register = Base + "/identity/register";
-            
+
             public const string Refresh = Base + "/identity/refresh";
         }
     }

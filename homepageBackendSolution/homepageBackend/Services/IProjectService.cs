@@ -9,7 +9,7 @@ namespace homepageBackend.Services
     {
         Task<List<Project>> GetProjectsAsync();
 
-        Task<Project> GetProjectIdAsync(Guid projectId);
+        Task<Project> GetProjectByIdAsync(Guid projectId);
 
         Task<bool> CreateProjectAsync(Project project);
 
@@ -17,5 +17,9 @@ namespace homepageBackend.Services
 
         Task<bool> DeleteProjectAsync(Guid projectId);
         Task<bool> UserOwnsPostAsync(Guid projectId, string userId);
+        Task<List<Tag>> GetAllTagsAsync();
+        Task<Tag> GetTagByNameAsync(string tagName);
+        Task<bool> CreateTagAsync(Tag tag);
+        Task<bool> DeleteTagAsync(string tagName);
     }
 }

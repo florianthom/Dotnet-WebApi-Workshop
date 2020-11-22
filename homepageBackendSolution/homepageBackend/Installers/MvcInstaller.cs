@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Text;
+using homepageBackend.Authorization;
 using homepageBackend.Options;
 using homepageBackend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -34,11 +36,18 @@ namespace homepageBackend.Installers
 
             services.AddSingleton(tokenValidationParameters);
 
+            // authenticate = use the given information and attempt to authenticate the user with that information
+            //     So this will attempt to create a user identity and make it available for the framework
+            // enables to store the access-token in the HTTPContext.User - property
+            // helpful to get the claims from that later in the controller
+            // introduction: https://docs.microsoft.com/de-de/aspnet/core/security/authentication/?view=aspnetcore-5.0
             services.AddAuthentication(a =>
                 {
-                    // enables to store the access-token in the HTTPContext.User - property
-                    // helpful to get the claims from that later in the controller
-                    // introduction: https://docs.microsoft.com/de-de/aspnet/core/security/authentication/?view=aspnetcore-5.0
+                    // because of this setting: the [Authorize]-Attribute in the Controller
+                    // dont need to set [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)] anymore
+                    // since we set here the default
+                    //
+                    // what are these schemes?: https://stackoverflow.com/a/52493428/11244995
                     a.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     a.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                     a.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -61,8 +70,14 @@ namespace homepageBackend.Installers
             //        
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("ProjectViewer", builder => builder.RequireClaim("project.view", "true"));
+                // options.AddPolicy("ProjectViewer", builder => builder.RequireClaim("project.view", "true"));
+                options.AddPolicy("MustWorkForDotCom", policy =>
+                {
+                    policy.AddRequirements(new WorksForCompanyRequirement(".com"));
+                } );
             });
+
+            services.AddSingleton<IAuthorizationHandler, WorksForCompanyHandler>();
         }
     }
 }

@@ -14,8 +14,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Query.Expressions.Internal;
 
 namespace homepageBackend.Controllers
 {
-    // this authorization attribute checks if the user is authenticated :D
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles= "Admin, Viewer")]
+    // this authorization attribute checks if the user is authenticated
+    // because we defined our default AuthenticationScheme in MvcInstaller
+    // we can simple write [Authorize] instead of:
+    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize]
     public class ProjectsController : Controller
     {
         private readonly IProjectService _projectService;
@@ -27,21 +30,42 @@ namespace homepageBackend.Controllers
 
         [HttpGet]
         [Route(ApiRoutes.Projects.GetAll)]
+        // [AllowAnonymous]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _projectService.GetProjectsAsync());
+            var projects = await _projectService.GetProjectsAsync();
+            var projectResponses = projects.Select(a => new ProjectResponse
+            {
+                Id = a.Id,
+                Name = a.Name,
+                UserId = a.UserId,
+                Tags = a.Tags.Select(a => new TagResponse()
+                {
+                    Name = a.TagName
+                }).ToList()
+            }).ToList();
+            return Ok(projectResponses);
         }
 
         [HttpGet]
         [Route(ApiRoutes.Projects.Get)]
         public async Task<IActionResult> Get([FromRoute] Guid projectId)
         {
-            var project = await _projectService.GetProjectIdAsync(projectId);
+            var project = await _projectService.GetProjectByIdAsync(projectId);
 
             if (project == null)
                 NotFound();
 
-            return Ok(project);
+            return Ok(new ProjectResponse
+            {
+                Id = project.Id,
+                Name = project.Name,
+                UserId = project.UserId,
+                Tags = project.Tags.Select(a => new TagResponse()
+                {
+                    Name = a.TagName
+                }).ToList()
+            });
         }
 
         [HttpPut]
@@ -56,12 +80,22 @@ namespace homepageBackend.Controllers
                 return BadRequest(new {error = "You do not own this post"});
             }
 
-            var project = await _projectService.GetProjectIdAsync(projectId);
+            var project = await _projectService.GetProjectByIdAsync(projectId);
             project.Name = request.Name;
 
             var updated = await _projectService.UpdateProjectAsync(project);
 
-            if (updated) return Ok(project);
+            if (updated)
+                return Ok(new ProjectResponse
+                {
+                    Id = project.Id,
+                    Name = project.Name,
+                    UserId = project.UserId,
+                    Tags = project.Tags.Select(a => new TagResponse()
+                    {
+                        Name = a.TagName
+                    }).ToList()
+                });
 
             return NotFound();
         }
@@ -69,6 +103,7 @@ namespace homepageBackend.Controllers
         [HttpDelete]
         [Route(ApiRoutes.Projects.Delete)]
         [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "MustWorkForDotCom")]
         public async Task<IActionResult> Delete([FromRoute] Guid projectId)
         {
             var userOwnsProject = await _projectService.UserOwnsPostAsync(projectId, HttpContext.GetUserId());
@@ -88,13 +123,18 @@ namespace homepageBackend.Controllers
 
         [HttpPost]
         [Route(ApiRoutes.Projects.Create)]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] CreateProjectRequest projectRequest)
         {
+            var newProjectId = Guid.NewGuid();
             var project = new Project
             {
                 Name = projectRequest.Name,
-                UserId = HttpContext.GetUserId()
+                UserId = HttpContext.GetUserId(),
+                Tags = projectRequest.Tags.Select(a => new ProjectTag()
+                {
+                    ProjectId = newProjectId,
+                    TagName = a
+                }).ToList()
             };
 
             await _projectService.CreateProjectAsync(project);
@@ -103,7 +143,16 @@ namespace homepageBackend.Controllers
             var locationUri = baseUrl + "/" + ApiRoutes.Projects.Get.Replace("{projectId}", project.Id.ToString());
 
 
-            var response = new ProjectResponse {Id = project.Id};
+            var response = new ProjectResponse
+            {
+                Id = project.Id,
+                Name = project.Name,
+                UserId = project.UserId,
+                Tags = project.Tags.Select(a => new TagResponse()
+                {
+                    Name = a.TagName
+                }).ToList()
+            };
             return Created(locationUri, response);
         }
     }
