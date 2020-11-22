@@ -20,8 +20,8 @@ namespace homepageBackend.Installers
             services.AddSingleton(jwtSettings);
 
             services.AddScoped<IIdentityService, IdentityService>();
-            
-            var tokenValidationParameters =  new TokenValidationParameters
+
+            var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings.Secret)),
@@ -48,6 +48,21 @@ namespace homepageBackend.Installers
                     b.SaveToken = true;
                     b.TokenValidationParameters = tokenValidationParameters;
                 });
+
+            // Authorization will be available through
+            //    - 1. (cbac) policies with required claims to which the users claims (in a jwt) are evaluate against
+            //        - need to be registered here to be used in the Controller with sth. like (Authorize(Policy = "ProjectViewer"))
+            //    - 2. (rbac) roles
+            //        - implemented through a roleManager
+            //        - dont need to be registered here to be used in the controller
+            //        - but needs to be registed in the dbinstaller in the addDefaultIdenetity
+            //            to get the RoleManager
+            //        ( - and needs to create Roles e.g. in the program.cs, i guess its better to to this in the seedData)
+            //        
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ProjectViewer", builder => builder.RequireClaim("project.view", "true"));
+            });
         }
     }
 }

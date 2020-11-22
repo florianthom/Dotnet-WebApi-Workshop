@@ -19,22 +19,10 @@ namespace homepageBackend.Installers
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddRoles<IdentityRole>()
                 // to make entityFramework function with identity
                 .AddEntityFrameworkStores<DataContext>();
-
-            services.AddAuthorization(options =>
-            {
-                // options.AddPolicy("EditRolePolicy",
-                //     policy => policy.RequireAssertion(context =>
-                //     context.User.IsInRole("Admin")
-                //     &&
-                //     context.User.HasClaim(claim => claim.Type == "Edit Role" && claim.Value == "true")
-                //     ||
-                //     context.User.IsInRole("Super Admin")
-                //     ));
-                // options.AddPolicy("AdminRolePolicy",
-                //     policy => policy.RequireRole("Admin"));
-            });
+            
 
             services.Configure<IdentityOptions>(options =>
             {

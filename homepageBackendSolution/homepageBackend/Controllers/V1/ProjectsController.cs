@@ -14,7 +14,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Query.Expressions.Internal;
 
 namespace homepageBackend.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles= "Admin, Viewer")]
     public class ProjectsController : Controller
     {
         private readonly IProjectService _projectService;
@@ -45,6 +45,7 @@ namespace homepageBackend.Controllers
 
         [HttpPut]
         [Route(ApiRoutes.Projects.Update)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update([FromRoute] Guid projectId, [FromBody] UpdateProjectRequest request)
         {
             var userOwnsProject = await _projectService.UserOwnsPostAsync(projectId, HttpContext.GetUserId());
@@ -66,6 +67,7 @@ namespace homepageBackend.Controllers
 
         [HttpDelete]
         [Route(ApiRoutes.Projects.Delete)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete([FromRoute] Guid projectId)
         {
             var userOwnsProject = await _projectService.UserOwnsPostAsync(projectId, HttpContext.GetUserId());
@@ -85,6 +87,7 @@ namespace homepageBackend.Controllers
 
         [HttpPost]
         [Route(ApiRoutes.Projects.Create)]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] CreateProjectRequest projectRequest)
         {
             var project = new Project
