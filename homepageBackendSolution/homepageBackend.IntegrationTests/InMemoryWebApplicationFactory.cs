@@ -29,6 +29,7 @@ namespace homepageBackend.IntegrationTests
 
                 var sp = services.BuildServiceProvider();
 
+                // access in-memory database
                 using (var scope = sp.CreateScope())
                 {
                     var scopedServices = scope.ServiceProvider;

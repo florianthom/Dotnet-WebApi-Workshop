@@ -19,13 +19,13 @@ namespace homepageBackend.IntegrationTests
     // https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-5.0
     public class IntegrationTest : IDisposable
     {
-        
         // attribute since maybe this factory needs additional configuration
         // e.g. init data
         //    - in that case you have to adjust the IWebHostBuilder inside the e.g. InMemoryWebApplicationFactory
         //    - e.g. client = _factory.WithWebHostBuilder(builder => /* *).CreateClient(/* */);
         //    - https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-5.0
         protected readonly WebApplicationFactory<homepageBackend.Startup> AppFactory;
+
         // attribute since its needed in each test
         protected readonly HttpClient TestClient;
 
@@ -54,7 +54,8 @@ namespace homepageBackend.IntegrationTests
 
         protected async Task AuthenticateAsync()
         {
-            TestClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", await GetJwtAsync());
+            TestClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("bearer", await GetJwtAsync());
         }
 
         private async Task<string> GetJwtAsync()
@@ -68,15 +69,43 @@ namespace homepageBackend.IntegrationTests
             var registrationResponse = await response.Content.ReadFromJsonAsync<AuthSuccessResponse>();
             return registrationResponse.Token;
         }
-        
+
+        protected async Task<ProjectResponse> CreateProjectAsync(CreateProjectRequest request)
+        {
+            var response = await TestClient.PostAsJsonAsync(ApiRoutes.Projects.Create, request);
+            return await response.Content.ReadFromJsonAsync<ProjectResponse>();
+        }
+
+        // this dispose function chain is called the dispose pattern
         public void Dispose()
         {
-            TestClient.Dispose(); 
-            AppFactory.Dispose();
-            
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Problem: Nethertheless of TestClient.Dispose && Appfactory.Dispose,
+        //    the same in-memory database is called
+        // Solution:
+        //    - 1. since the test-class constructor is called for each test (because of the way
+        //        we defined xunit) and tries to create a new database, we can ensure that the database
+        //        has a different name every time, so the context will bind to the new database with the new name
+        //        (so we have a fresh database but i guess the old database continues to live)
+        //    - 2. create and get scope to the Service DataContext and delete it
+        //    ( - 3. https://docs.microsoft.com/en-us/ef/core/testing/testing-sample)
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // access in-memory database
+                using (var serviceScope = AppFactory.Services.CreateScope())
+                {
+                    var context = serviceScope.ServiceProvider.GetService<DataContext>();
+                    context.Database.EnsureDeleted();
+                }
+
+                TestClient.Dispose();
+                AppFactory.Dispose();
+            }
         }
     }
 }
-
-
-
