@@ -22,7 +22,7 @@ namespace homepageBackend.Data
 
         public DbSet<Tag> Tags { get; set; }
 
-        public DbSet<ProjectTag> PostTags { get; set; }
+        public DbSet<ProjectTag> ProjectTags { get; set; }
 
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 

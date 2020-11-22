@@ -109,9 +109,9 @@ namespace homepageBackend.Services
             if (tag == null)
                 return true;
 
-            var postTags = await _dataContext.PostTags.Where(x => x.TagName == tagName.ToLower()).ToListAsync();
+            var postTags = await _dataContext.ProjectTags.Where(x => x.TagName == tagName.ToLower()).ToListAsync();
 
-            _dataContext.PostTags.RemoveRange(postTags);
+            _dataContext.ProjectTags.RemoveRange(postTags);
             _dataContext.Tags.Remove(tag);
             return await _dataContext.SaveChangesAsync() > postTags.Count;
         }
