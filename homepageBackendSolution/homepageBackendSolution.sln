@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "homepageBackend", "homepage
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "homepageBackend.IntegrationTests", "homepageBackend.IntegrationTests\homepageBackend.IntegrationTests.csproj", "{84F8BD56-309F-41E3-9AB7-52DD559AD02D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "homepageBackend.Sdk", "homepageBackend.Sdk\homepageBackend.Sdk.csproj", "{F7B00BF4-9528-472B-91CA-762DC9786BF8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{84F8BD56-309F-41E3-9AB7-52DD559AD02D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84F8BD56-309F-41E3-9AB7-52DD559AD02D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84F8BD56-309F-41E3-9AB7-52DD559AD02D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7B00BF4-9528-472B-91CA-762DC9786BF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7B00BF4-9528-472B-91CA-762DC9786BF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7B00BF4-9528-472B-91CA-762DC9786BF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7B00BF4-9528-472B-91CA-762DC9786BF8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
