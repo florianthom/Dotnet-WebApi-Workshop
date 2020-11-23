@@ -29,6 +29,8 @@ namespace homepageBackend
             services.InstallDb(Configuration);
             
             services.InstallMvc(Configuration);
+
+            services.InstallAutomapper();
             
             services.InstallSwagger();
         }

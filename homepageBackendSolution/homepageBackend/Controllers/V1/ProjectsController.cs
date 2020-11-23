@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using homepageBackend.Contracts.V1;
 using homepageBackend.Contracts.V1.Requests;
 using homepageBackend.Contracts.V1.Responses;
@@ -22,10 +24,12 @@ namespace homepageBackend.Controllers
     public class ProjectsController : Controller
     {
         private readonly IProjectService _projectService;
+        private readonly IMapper _mapper;
 
-        public ProjectsController(IProjectService projectService)
+        public ProjectsController(IProjectService projectService, IMapper mapper)
         {
             _projectService = projectService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -34,17 +38,8 @@ namespace homepageBackend.Controllers
         public async Task<IActionResult> GetAll()
         {
             var projects = await _projectService.GetProjectsAsync();
-            var projectResponses = projects.Select(a => new ProjectResponse
-            {
-                Id = a.Id,
-                Name = a.Name,
-                UserId = a.UserId,
-                Tags = a.Tags.Select(a => new TagResponse()
-                {
-                    Name = a.TagName
-                }).ToList()
-            }).ToList();
-            return Ok(projectResponses);
+            // mapping from domain to the contract
+            return Ok(_mapper.Map<List<ProjectResponse>>(projects));
         }
 
         [HttpGet]
@@ -56,16 +51,7 @@ namespace homepageBackend.Controllers
             if (project == null)
                 NotFound();
 
-            return Ok(new ProjectResponse
-            {
-                Id = project.Id,
-                Name = project.Name,
-                UserId = project.UserId,
-                Tags = project.Tags.Select(a => new TagResponse()
-                {
-                    Name = a.TagName
-                }).ToList()
-            });
+            return Ok(_mapper.Map<ProjectResponse>(project));
         }
 
         [HttpPut]
@@ -86,16 +72,7 @@ namespace homepageBackend.Controllers
             var updated = await _projectService.UpdateProjectAsync(project);
 
             if (updated)
-                return Ok(new ProjectResponse
-                {
-                    Id = project.Id,
-                    Name = project.Name,
-                    UserId = project.UserId,
-                    Tags = project.Tags.Select(a => new TagResponse()
-                    {
-                        Name = a.TagName
-                    }).ToList()
-                });
+                return Ok(_mapper.Map<ProjectResponse>(project));
 
             return NotFound();
         }
@@ -141,19 +118,7 @@ namespace homepageBackend.Controllers
 
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
             var locationUri = baseUrl + "/" + ApiRoutes.Projects.Get.Replace("{projectId}", project.Id.ToString());
-
-
-            var response = new ProjectResponse
-            {
-                Id = project.Id,
-                Name = project.Name,
-                UserId = project.UserId,
-                Tags = project.Tags.Select(a => new TagResponse()
-                {
-                    Name = a.TagName
-                }).ToList()
-            };
-            return Created(locationUri, response);
+            return Created(locationUri, _mapper.Map<ProjectResponse>(project));
         }
     }
 }

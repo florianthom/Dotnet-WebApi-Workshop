@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using homepageBackend.Contracts.V1;
 using homepageBackend.Contracts.V1.Requests;
 using homepageBackend.Contracts.V1.Responses;
@@ -18,10 +19,13 @@ namespace homepageBackend.Controllers
     public class TagsController : Controller
     {
         private readonly IProjectService _projectService;
+        private readonly IMapper _mapper;
         
-        public TagsController(IProjectService projectService)
+        
+        public TagsController(IProjectService projectService, IMapper mapper)
         {
             _projectService = projectService;
+            _mapper = mapper;
         }
         
         
@@ -29,11 +33,7 @@ namespace homepageBackend.Controllers
         public async Task<IActionResult> GetAll()
         {
             var tags = await _projectService.GetAllTagsAsync();
-            var tagResponses = tags.Select(a => new TagResponse()
-            {
-                Name = a.Name
-            }).ToList();
-            return Ok(tagResponses);
+            return Ok(_mapper.Map<List<TagResponse>>(tags));
         }
         
         [HttpGet(ApiRoutes.Tags.Get)]
@@ -46,10 +46,7 @@ namespace homepageBackend.Controllers
                 return NotFound();
             }
             
-            return Ok(new TagResponse()
-            {
-                Name = tag.Name
-            });
+            return Ok(_mapper.Map<TagResponse>(tag));
         }
         
         
@@ -71,10 +68,7 @@ namespace homepageBackend.Controllers
                 
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
             var locationUri = baseUrl + "/" + ApiRoutes.Tags.Get.Replace("{tagName}", newTag.Name);
-            return Created(locationUri, new TagResponse()
-            {
-                Name = newTag.Name
-            });
+            return Created(locationUri, _mapper.Map<TagResponse>(newTag));
         }
         
         [HttpDelete(ApiRoutes.Tags.Delete)] 
