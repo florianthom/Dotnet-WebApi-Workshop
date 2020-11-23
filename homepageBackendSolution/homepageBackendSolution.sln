@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "homepageBackend.Integration
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "homepageBackend.Sdk", "homepageBackend.Sdk\homepageBackend.Sdk.csproj", "{F7B00BF4-9528-472B-91CA-762DC9786BF8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "homepageBackend.SdkSample", "homepageBackend.SdkSample\homepageBackend.SdkSample.csproj", "{BC81ABA4-4DC6-463F-A639-64BEF1C5CE18}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{F7B00BF4-9528-472B-91CA-762DC9786BF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7B00BF4-9528-472B-91CA-762DC9786BF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7B00BF4-9528-472B-91CA-762DC9786BF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC81ABA4-4DC6-463F-A639-64BEF1C5CE18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC81ABA4-4DC6-463F-A639-64BEF1C5CE18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC81ABA4-4DC6-463F-A639-64BEF1C5CE18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC81ABA4-4DC6-463F-A639-64BEF1C5CE18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
