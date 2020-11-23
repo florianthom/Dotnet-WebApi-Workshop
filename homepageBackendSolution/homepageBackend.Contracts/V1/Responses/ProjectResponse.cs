@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using homepageBackend.Domain;
 
 namespace homepageBackend.Contracts.V1.Responses
 {

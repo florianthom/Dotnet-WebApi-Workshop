@@ -1,4 +1,6 @@
-﻿namespace homepageBackend.Contracts.V1.Requests
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace homepageBackend.Contracts.V1.Requests
 {
     public class CreateTagRequest
     {

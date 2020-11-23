@@ -35,4 +35,8 @@
     <Folder Include="Data\Migrations" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\homepageBackend.Contracts\homepageBackend.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>

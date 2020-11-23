@@ -23,6 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\homepageBackend.Contracts\homepageBackend.Contracts.csproj" />
       <ProjectReference Include="..\homepageBackend\homepageBackend.csproj" />
     </ItemGroup>
 
