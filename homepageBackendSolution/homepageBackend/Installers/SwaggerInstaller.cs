@@ -1,6 +1,9 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace homepageBackend.Installers
 {
@@ -21,6 +24,9 @@ namespace homepageBackend.Installers
                         Email = "thom.florian@yahoo.de",
                     },
                 });
+                
+                // make swagger load the SwaggerExamples/ - folder
+                a.ExampleFilters();
                 
                 a.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -46,7 +52,20 @@ namespace homepageBackend.Installers
                         Array.Empty<string>()
                     }
                 });
+
+                // loads swaggers-xml-file and loads it into the middleware
+                // to make swagger to generate that file, we had to adjust the .csproj-file
+                // and add some stuff there
+                // actually the file is a documentation file generate from asp.net/the C# project
+                // and has less to do with swagger
+                // the xml-file is generated to the /bin folder
+                var xmlFile = Assembly.GetExecutingAssembly().GetName().Name.ToString() + ".xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                a.IncludeXmlComments(xmlPath);
             });
+
+            // make swagger load the SwaggerExamples/ - folder
+            services.AddSwaggerExamplesFromAssemblyOf<Startup>();
         }
     }
 }
