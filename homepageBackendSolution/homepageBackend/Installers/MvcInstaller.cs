@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text;
+using FluentValidation.AspNetCore;
 using homepageBackend.Authorization;
+using homepageBackend.Filter;
 using homepageBackend.Options;
 using homepageBackend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,7 +17,12 @@ namespace homepageBackend.Installers
     {
         public static void InstallMvc(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddControllers();
+            services.AddControllers(options =>
+                {
+                    options.Filters.Add<ValidationFilter>();
+                })
+                .AddFluentValidation(configuration =>
+                    configuration.RegisterValidatorsFromAssemblyContaining<Startup>());
 
             var jwtSettings = new JwtSettings();
             configuration.Bind(nameof(jwtSettings), jwtSettings);

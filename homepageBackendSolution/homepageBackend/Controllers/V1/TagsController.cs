@@ -53,6 +53,10 @@ namespace homepageBackend.Controllers
         [HttpPost(ApiRoutes.Tags.Create)]
         public async Task<IActionResult> Create([FromBody] CreateTagRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                Console.WriteLine("hi");
+            }
             var newTag = new Tag
             {
                 Name = request.TagName,
