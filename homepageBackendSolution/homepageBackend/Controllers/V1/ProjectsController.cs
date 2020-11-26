@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using homepageBackend.Cache;
 using homepageBackend.Contracts.V1;
 using homepageBackend.Contracts.V1.Requests;
 using homepageBackend.Contracts.V1.Responses;
@@ -34,6 +35,7 @@ namespace homepageBackend.Controllers
 
         [HttpGet]
         [Route(ApiRoutes.Projects.GetAll)]
+        [Cache(600)]
         // [AllowAnonymous]
         public async Task<IActionResult> GetAll()
         {

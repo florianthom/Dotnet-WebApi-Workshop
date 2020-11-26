@@ -31,7 +31,9 @@ namespace homepageBackend
             services.InstallMvc(Configuration);
 
             services.InstallAutomapper();
-            
+
+            services.InstallCacheRedis(Configuration);
+
             services.InstallSwagger();
         }
 
