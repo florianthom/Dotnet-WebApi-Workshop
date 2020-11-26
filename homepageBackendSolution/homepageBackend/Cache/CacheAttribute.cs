@@ -37,6 +37,8 @@ namespace homepageBackend.Cache
             }
 
             var cacheService = context.HttpContext.RequestServices.GetRequiredService<IResponseCacheService>();
+            // output e.g. /api/v1/projects since we currently dont have queryparameters
+            //    - (but this current method support possible query-parameter aswell)
             var cacheKey = GenerateCacheKeyFromRequest(context.HttpContext.Request);
             var cachedResponse = await cacheService.GetCachedResponseAsync(cacheKey);
 
@@ -66,18 +68,23 @@ namespace homepageBackend.Cache
 
         }
 
+        // output e.g. /api/v1/projects
+        // in the current implementation are possible query paramter included (but not needed)
+        //    - in that case that method generates something like /api/v1/projects|queryParam1-queryParam1Value|queryParam1-queryParam1Value ...
         private string GenerateCacheKeyFromRequest(HttpRequest request)
         {
             var keyBuilder = new StringBuilder();
 
             keyBuilder.Append($"{request.Path}");
 
+            // for this project currently not needed/important since we dont have any request-query-paramter
             foreach (var (key, value) in request.Query.OrderBy(a => a.Key))
             {
                 keyBuilder.Append($"|{key}-{value}");
             }
 
-            return keyBuilder.ToString();
+            var keyBuilderResult = keyBuilder.ToString();
+            return keyBuilderResult;
         }
     }
 }
