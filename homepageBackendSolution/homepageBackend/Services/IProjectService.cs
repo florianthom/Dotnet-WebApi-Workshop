@@ -7,7 +7,7 @@ namespace homepageBackend.Services
 {
     public interface IProjectService
     {
-        Task<List<Project>> GetProjectsAsync();
+        Task<List<Project>> GetProjectsAsync(PaginationFilter paginationFilter = null);
 
         Task<Project> GetProjectByIdAsync(Guid projectId);
 

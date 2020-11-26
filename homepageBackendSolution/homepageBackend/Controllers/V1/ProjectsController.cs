@@ -6,6 +6,7 @@ using AutoMapper;
 using homepageBackend.Cache;
 using homepageBackend.Contracts.V1;
 using homepageBackend.Contracts.V1.Requests;
+using homepageBackend.Contracts.V1.Requests.Queries;
 using homepageBackend.Contracts.V1.Responses;
 using homepageBackend.Domain;
 using homepageBackend.Extensions;
@@ -37,11 +38,16 @@ namespace homepageBackend.Controllers
         [Route(ApiRoutes.Projects.GetAll)]
         [Cache(600)]
         // [AllowAnonymous]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery]PaginationQuery paginationQuery)
         {
-            var projects = await _projectService.GetProjectsAsync();
+            var paginationFilter = _mapper.Map<PaginationFilter>(paginationQuery);
+            var projects = await _projectService.GetProjectsAsync(paginationFilter);
+
+            var projectsResponse = _mapper.Map<List<ProjectResponse>>(projects);
+
             // mapping from domain to the contract
-            return Ok(_mapper.Map<List<ProjectResponse>>(projects));
+            var paginationResponse = new PagedResponse<ProjectResponse>(_mapper.Map<List<ProjectResponse>>(projects));
+            return Ok(paginationResponse);
         }
 
         [HttpGet]
@@ -53,7 +59,7 @@ namespace homepageBackend.Controllers
             if (project == null)
                 NotFound();
 
-            return Ok(_mapper.Map<ProjectResponse>(project));
+            return Ok(new Response<ProjectResponse>(_mapper.Map<ProjectResponse>(project)));
         }
 
         [HttpPut]
@@ -74,7 +80,7 @@ namespace homepageBackend.Controllers
             var updated = await _projectService.UpdateProjectAsync(project);
 
             if (updated)
-                return Ok(_mapper.Map<ProjectResponse>(project));
+                return Ok(new Response<ProjectResponse>(_mapper.Map<ProjectResponse>(project)));
 
             return NotFound();
         }
@@ -120,7 +126,7 @@ namespace homepageBackend.Controllers
 
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
             var locationUri = baseUrl + "/" + ApiRoutes.Projects.Get.Replace("{projectId}", project.Id.ToString());
-            return Created(locationUri, _mapper.Map<ProjectResponse>(project));
+            return Created(locationUri, new Response<ProjectResponse>(_mapper.Map<ProjectResponse>(project)));
         }
     }
 }

@@ -17,9 +17,19 @@ namespace homepageBackend.Services
             _dataContext = dataContext;
         }
 
-        public async Task<List<Project>> GetProjectsAsync()
+        public async Task<List<Project>> GetProjectsAsync(PaginationFilter paginationFilter = null)
         {
-            return await _dataContext.Projects.Include(a => a.Tags).ToListAsync();
+            if (paginationFilter == null)
+            {
+                return await _dataContext.Projects.Include(a => a.Tags).ToListAsync();
+            }
+
+            var skip = (paginationFilter.PageNumber - 1) * paginationFilter.PageSize;
+
+            return await _dataContext.Projects.Include(a => a.Tags)
+                .Skip(skip)
+                .Take(paginationFilter.PageSize)
+                .ToListAsync();
         }
 
         public async Task<Project> GetProjectByIdAsync(Guid projectId)
