@@ -5,6 +5,9 @@ using Newtonsoft.Json;
 
 namespace homepageBackend.Services
 {
+    
+    // runs only after the main-application has been started running
+    // this is not the case if at the very beginning the redis-server is false/not found
     public class ResponseCacheService : IResponseCacheService
     {
         private readonly IDistributedCache _distributedCache;
