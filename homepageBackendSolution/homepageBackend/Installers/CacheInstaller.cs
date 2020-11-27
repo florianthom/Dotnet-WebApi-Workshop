@@ -3,6 +3,7 @@ using homepageBackend.Cache;
 using homepageBackend.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Redis;
 
 namespace homepageBackend.Installers
 {
@@ -19,6 +20,10 @@ namespace homepageBackend.Installers
                 return;
             }
 
+            // connectionMultiplixer needed to check for redis-database state by healthchecks
+            services.AddSingleton<IConnectionMultiplexer>(_ =>
+                ConnectionMultiplexer.Connect(redisCacheSettings.ConnectionString));
+            
             services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = redisCacheSettings.ConnectionString;
