@@ -10,7 +10,8 @@
 
         public PaginationQuery(int pageNumber, int pageSize)
         {
-            
+            PageNumber = pageNumber;
+            PageSize = pageSize > 100 ? 100 : pageSize;
         }
 
         public int PageSize { get; set; }
