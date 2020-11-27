@@ -8,3 +8,5 @@ projectsController.Create: Erstellt eigene Id damit man ohne ef die intermediate
     frontend erstellen
     developer.facebook.com account erstellen
     app erstellen + connectionstring anpassen
+    ef 5 feature mit m:n datenbanken benutzen
+    tag aus projectservice herausnehmen

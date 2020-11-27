@@ -1,7 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AutoMapper;
 using homepageBackend.Cache;
 using homepageBackend.Contracts.V1;
+using homepageBackend.Contracts.V1.Responses;
+using homepageBackend.Domain;
 using homepageBackend.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,8 +28,18 @@ namespace homepageBackend.Controllers
         [Cache(600)]
         public async Task<IActionResult> GetAll()
         {
-            var documents = _documentService.GetDocumentsAsync();
+            var documents = await _documentService.GetDocumentsAsync();
             return Ok(documents);
+        }
+
+        public async Task<IActionResult> Get([FromRoute] Guid documentId)
+        {
+            var document = await _documentService.GetDocumentByIdAsync(documentId);
+
+            if (document==null)
+                return NotFound();
+            
+            return Ok(new Response<DocumentResponse>(_mapper<DocumentResponse>(document)));
         }
     }
 }

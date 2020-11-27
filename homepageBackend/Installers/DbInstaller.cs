@@ -33,6 +33,8 @@ namespace homepageBackend.Installers
             // changed to scoped because of tracking?!
             // services.AddSingleton<IProjectService, ProjectService>();
             services.AddScoped<IProjectService, ProjectService>();
+            
+            services.AddScoped<IDocumentService, DocumentService>();
         }
     }
 }

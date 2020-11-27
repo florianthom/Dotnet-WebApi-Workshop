@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace homepageBackend.Domain
+namespace homepageBackend.Contracts.V1.Responses
 {
-    public class Document
-    {
-        [Key]
+    public class DocumentResponse
+    { 
         public Guid Id { get; set; }
 
         public string Name { get; set; }
@@ -17,23 +16,17 @@ namespace homepageBackend.Domain
         public string Topic { get; set; }
 
         public string Link { get; set; }
-        
-        public virtual List<DocumentTag> Tags { get; set; }
 
+        public IEnumerable<TagResponse> Tags { get; set; }
 
         public DateTime CreatedOn { get; set; }
 
         public string CreatorId { get; set; }
-
-        [ForeignKey(nameof(CreatorId))]
-        public ApplicationUser CreatedBy { get; set; }
+        
         
         public DateTime UpdatedOn { get; set; }
         
         public string UpdaterId { get; set; }
-        
-        [ForeignKey(nameof(UpdaterId))]
-        public ApplicationUser UpdatedBy { get; set; }
         
     }
 }
