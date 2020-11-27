@@ -6,6 +6,8 @@ using StackExchange.Redis;
 
 namespace homepageBackend.HealthChecks
 {
+    // runs only after the main-application has been started running
+    // this is not the case if at the very beginning the redis-server is false/not found
     public class RedisHealthCheck : IHealthCheck
     {
         private readonly IConnectionMultiplexer _connectionMultiplexer;

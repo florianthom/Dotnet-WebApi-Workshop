@@ -6,8 +6,8 @@ using Newtonsoft.Json;
 namespace homepageBackend.Services
 {
     
-    // runs only after the main-application has been started running
-    // this is not the case if at the very beginning the redis-server is false/not found
+    // "[..] There's a bug on cached data, when you query data for the first time
+    // from database the response is camel-cased and the response from cached data is pascal-cased"
     public class ResponseCacheService : IResponseCacheService
     {
         private readonly IDistributedCache _distributedCache;
