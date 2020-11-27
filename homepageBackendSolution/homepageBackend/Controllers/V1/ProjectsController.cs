@@ -41,10 +41,11 @@ namespace homepageBackend.Controllers
         [Route(ApiRoutes.Projects.GetAll)]
         [Cache(600)]
         // [AllowAnonymous]
-        public async Task<IActionResult> GetAll([FromQuery]PaginationQuery paginationQuery)
+        public async Task<IActionResult> GetAll([FromQuery] GetAllProjectsQuery query, [FromQuery]PaginationQuery paginationQuery)
         {
             var paginationFilter = _mapper.Map<PaginationFilter>(paginationQuery);
-            var projects = await _projectService.GetProjectsAsync(paginationFilter);
+            var filter = _mapper.Map<GetAllProjectsFilter>(query);
+            var projects = await _projectService.GetProjectsAsync(filter, paginationFilter);
             var projectsResponse = _mapper.Map<List<ProjectResponse>>(projects);
 
             if (paginationFilter == null || paginationFilter.PageNumber < 1 || paginationFilter.PageSize < 1)

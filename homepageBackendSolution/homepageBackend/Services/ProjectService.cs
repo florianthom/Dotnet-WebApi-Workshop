@@ -17,12 +17,16 @@ namespace homepageBackend.Services
             _dataContext = dataContext;
         }
 
-        public async Task<List<Project>> GetProjectsAsync(PaginationFilter paginationFilter = null)
+        public async Task<List<Project>> GetProjectsAsync(GetAllProjectsFilter filter = null, PaginationFilter paginationFilter = null)
         {
+            var queryable = _dataContext.Projects.AsQueryable();
+
             if (paginationFilter == null)
             {
                 return await _dataContext.Projects.Include(a => a.Tags).ToListAsync();
             }
+            
+            queryable = AddFiltersOnQuery(filter, queryable);
 
             var skip = (paginationFilter.PageNumber - 1) * paginationFilter.PageSize;
 
@@ -139,6 +143,16 @@ namespace homepageBackend.Services
                 await _dataContext.Tags.AddAsync(new Tag
                     {Name = tag.TagName, CreatedOn = DateTime.UtcNow, CreatorId = post.UserId});
             }
+        }
+        
+        private static IQueryable<Project> AddFiltersOnQuery(GetAllProjectsFilter filter, IQueryable<Project> queryable)
+        {
+            if (!string.IsNullOrEmpty(filter?.UserId))
+            {
+                queryable.Where(a => a.UserId == filter.UserId);
+            }
+
+            return queryable;
         }
     }
 }

@@ -9,6 +9,7 @@ namespace homepageBackend.Mapping
         public RequestToDomainProfile()
         {
             CreateMap<PaginationQuery, PaginationFilter>();
+            CreateMap<GetAllProjectsQuery, GetAllProjectsFilter>();
         }
     }
 }
