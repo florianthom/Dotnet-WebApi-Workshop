@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace homepageBackend.Controllers
 {
-    public class DocumentController
+    public class DocumentController : Controller
     {
         private readonly DocumentService _documentService;
         private readonly UriService _uriService;
@@ -23,10 +23,10 @@ namespace homepageBackend.Controllers
         [HttpGet]
         [Route(ApiRoutes.Documents.GetAll)]
         [Cache(600)]
-        public Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            // var documents = _documentService
-            return null;
+            var documents = _documentService.GetDocumentsAsync();
+            return Ok(documents);
         }
     }
 }
