@@ -20,6 +20,21 @@ namespace homepageBackend.Contracts.V1
 
             public const string Create = Base + "/projects";
         }
+        
+        public static class Documents
+        {
+            public const string GetAll = Base + "/documents";
+
+            public const string Get = Base + "/documents/{documentId}";
+
+            public const string Update = Base + "/documents/{documentId}";
+
+            public const string Delete = Base + "/documents/{documentId}";
+
+            public const string Create = Base + "/documents";
+        }
+        
+        
 
         public static class Tags
         {

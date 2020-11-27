@@ -45,6 +45,7 @@ namespace homepageBackend.Controllers
         {
             var paginationFilter = _mapper.Map<PaginationFilter>(paginationQuery);
             var filter = _mapper.Map<GetAllProjectsFilter>(query);
+            
             var projects = await _projectService.GetProjectsAsync(filter, paginationFilter);
             var projectsResponse = _mapper.Map<List<ProjectResponse>>(projects);
 
@@ -53,9 +54,7 @@ namespace homepageBackend.Controllers
                 return Ok(new PagedResponse<ProjectResponse>(projectsResponse));
             }
             
-            var paginationResponse =
-                PaginationHelpers.CreatePaginatedResponse(_uriService, paginationFilter, projectsResponse);
-            return Ok(paginationResponse);
+            return Ok(PaginationHelpers.CreatePaginatedResponse(_uriService, paginationFilter, projectsResponse));
         }
 
         [HttpGet]
