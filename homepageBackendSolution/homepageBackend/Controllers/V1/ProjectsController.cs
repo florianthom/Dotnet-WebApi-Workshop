@@ -121,6 +121,7 @@ namespace homepageBackend.Controllers
             var newProjectId = Guid.NewGuid();
             var project = new Project
             {
+                Id = newProjectId,
                 Name = projectRequest.Name,
                 UserId = HttpContext.GetUserId(),
                 Tags = projectRequest.Tags.Select(a => new ProjectTag()

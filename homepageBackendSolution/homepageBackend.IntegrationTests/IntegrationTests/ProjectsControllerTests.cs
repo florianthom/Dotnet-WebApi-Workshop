@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using homepageBackend.Contracts.V1;
 using homepageBackend.Contracts.V1.Requests;
+using homepageBackend.Contracts.V1.Responses;
 using homepageBackend.Domain;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
@@ -36,7 +38,7 @@ namespace homepageBackend.IntegrationTests
             
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
-            (await response.Content.ReadFromJsonAsync<List<Project>>()).Should().BeEmpty();
+            (await response.Content.ReadFromJsonAsync<PagedResponse<Project>>()).Data.Should().BeEmpty();
         }
 
         [Fact]
@@ -46,7 +48,8 @@ namespace homepageBackend.IntegrationTests
             await AuthenticateAsync();
             var createdProject = await CreateProjectAsync(new CreateProjectRequest()
             {
-                Name = "Test Project"
+                Name = "Test Project",
+                Tags = new []{"testtag"}
             });
 
             // Act
@@ -56,9 +59,10 @@ namespace homepageBackend.IntegrationTests
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var string1 = await response.Content.ReadAsStringAsync();
-            var returnedProject = await response.Content.ReadFromJsonAsync<Project>();
-            returnedProject.Id.Should().Be(createdProject.Id);
-            returnedProject.Name.Should().Be("Test Project");
+            var returnedProject = await response.Content.ReadFromJsonAsync<Response<ProjectResponse>>();
+            returnedProject.Data.Id.Should().Be(createdProject.Id);
+            returnedProject.Data.Name.Should().Be("Test Project");
+            returnedProject.Data.Tags.Single().Name.Should().Be("testtag");
         }
     }
 }

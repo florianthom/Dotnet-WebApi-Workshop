@@ -73,7 +73,7 @@ namespace homepageBackend.IntegrationTests
         protected async Task<ProjectResponse> CreateProjectAsync(CreateProjectRequest request)
         {
             var response = await TestClient.PostAsJsonAsync(ApiRoutes.Projects.Create, request);
-            return await response.Content.ReadFromJsonAsync<ProjectResponse>();
+            return (await response.Content.ReadFromJsonAsync<Response<ProjectResponse>>()).Data;
         }
 
         // this dispose function chain is called the dispose pattern

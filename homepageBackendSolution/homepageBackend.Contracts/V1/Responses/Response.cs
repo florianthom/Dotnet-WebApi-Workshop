@@ -12,7 +12,7 @@
 
         public Response(T response)
         {
-            
+            Data = response;
         }
         
     }
