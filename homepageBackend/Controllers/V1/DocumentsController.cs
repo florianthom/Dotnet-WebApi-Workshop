@@ -32,6 +32,9 @@ namespace homepageBackend.Controllers
             return Ok(documents);
         }
 
+        [HttpGet]
+        [Route(ApiRoutes.Documents.Get)]
+        [Cache(600)]
         public async Task<IActionResult> Get([FromRoute] Guid documentId)
         {
             var document = await _documentService.GetDocumentByIdAsync(documentId);
@@ -39,7 +42,7 @@ namespace homepageBackend.Controllers
             if (document==null)
                 return NotFound();
             
-            return Ok(new Response<DocumentResponse>(_mapper<DocumentResponse>(document)));
+            return Ok(new Response<DocumentResponse>(_mapper.Map<DocumentResponse>(document)));
         }
     }
 }
