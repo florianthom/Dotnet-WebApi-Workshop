@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using homepageBackend.Data;
 using homepageBackend.Domain;
 
 namespace homepageBackend.Services
 {
     public class DocumentService : IDocumentService
     {
+        private readonly DataContext _dataContext;
+
         public Task<List<Document>> GetDocumentsAsync()
         {
-            throw new NotImplementedException();
+            // return _dataContext.D
+            return null;
         }
 
         public Task<Document> GetDocumentByIdAsync(Guid documentId)

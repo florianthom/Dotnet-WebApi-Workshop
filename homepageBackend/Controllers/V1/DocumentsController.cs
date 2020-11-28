@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using homepageBackend.Cache;
@@ -29,20 +30,20 @@ namespace homepageBackend.Controllers
         public async Task<IActionResult> GetAll()
         {
             var documents = await _documentService.GetDocumentsAsync();
-            return Ok(documents);
+            return Ok(new Response<List<DocumentResponse>>(_mapper.Map<List<DocumentResponse>>(documents)));
         }
 
-        [HttpGet]
-        [Route(ApiRoutes.Documents.Get)]
-        [Cache(600)]
-        public async Task<IActionResult> Get([FromRoute] Guid documentId)
-        {
-            var document = await _documentService.GetDocumentByIdAsync(documentId);
-
-            if (document==null)
-                return NotFound();
-            
-            return Ok(new Response<DocumentResponse>(_mapper.Map<DocumentResponse>(document)));
-        }
+        // [HttpGet]
+        // [Route(ApiRoutes.Documents.Get)]
+        // [Cache(600)]
+        // public async Task<IActionResult> Get([FromRoute] Guid documentId)
+        // {
+        //     var document = await _documentService.GetDocumentByIdAsync(documentId);
+        //
+        //     if (document==null)
+        //         return NotFound();
+        //     
+        //     return Ok(new Response<DocumentResponse>(_mapper.Map<DocumentResponse>(document)));
+        // }
     }
 }

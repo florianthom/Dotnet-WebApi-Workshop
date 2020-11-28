@@ -20,9 +20,13 @@ namespace homepageBackend.Data
     {
         public DbSet<Project> Projects { get; set; }
 
+        public DbSet<Document> Documents { get; set; }
+
         public DbSet<Tag> Tags { get; set; }
 
         public DbSet<ProjectTag> ProjectTags { get; set; }
+        
+        public DbSet<ProjectTag> DocumentTags { get; set; }
 
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
@@ -38,6 +42,7 @@ namespace homepageBackend.Data
             base.OnModelCreating(builder);
             
             builder.Entity<ProjectTag>().Ignore(a => a.Project).HasKey(b => new {b.ProjectId, b.TagName});
+            builder.Entity<DocumentTag>().Ignore(a => a.Document).HasKey(b => new {b.DocumentId, b.TagName});
         }
     }
 }
