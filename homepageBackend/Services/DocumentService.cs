@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using homepageBackend.Data;
 using homepageBackend.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace homepageBackend.Services
 {
@@ -10,10 +11,14 @@ namespace homepageBackend.Services
     {
         private readonly DataContext _dataContext;
 
-        public Task<List<Document>> GetDocumentsAsync()
+        public DocumentService(DataContext dataContext)
         {
-            // return _dataContext.D
-            return null;
+            _dataContext = dataContext;
+        }
+
+        public async Task<List<Document>> GetDocumentsAsync()
+        { 
+            return await _dataContext.Documents.Include(a => a.Tags).ToListAsync();
         }
 
         public Task<Document> GetDocumentByIdAsync(Guid documentId)

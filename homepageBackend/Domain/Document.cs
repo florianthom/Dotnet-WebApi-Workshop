@@ -34,6 +34,5 @@ namespace homepageBackend.Domain
         
         [ForeignKey(nameof(UpdaterId))]
         public ApplicationUser UpdatedBy { get; set; }
-        
     }
 }
