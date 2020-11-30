@@ -74,7 +74,7 @@ namespace homepageBackend.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update([FromRoute] Guid projectId, [FromBody] UpdateProjectRequest request)
         {
-            var userOwnsProject = await _projectService.UserOwnsPostAsync(projectId, HttpContext.GetUserId());
+            var userOwnsProject = await _projectService.UserOwnsProjectAsync(projectId, HttpContext.GetUserId());
 
             if (!userOwnsProject)
             {
@@ -98,7 +98,7 @@ namespace homepageBackend.Controllers
         [Authorize(Policy = "MustWorkForDotCom")]
         public async Task<IActionResult> Delete([FromRoute] Guid projectId)
         {
-            var userOwnsProject = await _projectService.UserOwnsPostAsync(projectId, HttpContext.GetUserId());
+            var userOwnsProject = await _projectService.UserOwnsProjectAsync(projectId, HttpContext.GetUserId());
 
             if (!userOwnsProject)
             {

@@ -19,13 +19,13 @@ namespace homepageBackend.Controllers
     [Produces("application/json")]
     public class TagsController : Controller
     {
-        private readonly IProjectService _projectService;
+        private readonly ITagService _tagService;
         private readonly IMapper _mapper;
         
         
-        public TagsController(IProjectService projectService, IMapper mapper)
+        public TagsController(IMapper mapper, ITagService tagService)
         {
-            _projectService = projectService;
+            _tagService = tagService;
             _mapper = mapper;
         }
         
@@ -37,7 +37,7 @@ namespace homepageBackend.Controllers
         [Route(ApiRoutes.Tags.GetAll)]
         public async Task<IActionResult> GetAll()
         {
-            var tags = await _projectService.GetAllTagsAsync();
+            var tags = await _tagService.GetAllTagsAsync();
             return Ok(_mapper.Map<List<TagResponse>>(tags));
         }
         
@@ -45,7 +45,7 @@ namespace homepageBackend.Controllers
         [Route(ApiRoutes.Tags.Get)]
         public async Task<IActionResult> Get([FromRoute]string tagName)
         {
-            var tag = await _projectService.GetTagByNameAsync(tagName);
+            var tag = await _tagService.GetTagByNameAsync(tagName);
 
             if (tag == null)
             {
@@ -73,7 +73,7 @@ namespace homepageBackend.Controllers
                 CreatedOn = DateTime.UtcNow
             };
 
-            var created = await _projectService.CreateTagAsync(newTag);
+            var created = await _tagService.CreateTagAsync(newTag);
             if (!created)
             {
                 return BadRequest(new ErrorResponse(new ErrorModel{Message = "Unable to create tag"}));
@@ -88,7 +88,7 @@ namespace homepageBackend.Controllers
         [Route(ApiRoutes.Tags.Delete)]
         public async Task<IActionResult> Delete([FromRoute] string tagName)
         {
-            var deleted = await _projectService.DeleteTagAsync(tagName);
+            var deleted = await _tagService.DeleteTagAsync(tagName);
 
             if (deleted)
                 return NoContent();

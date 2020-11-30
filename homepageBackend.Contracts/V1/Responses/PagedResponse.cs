@@ -2,6 +2,8 @@
 
 namespace homepageBackend.Contracts.V1.Responses
 {
+    // intentionally does not inherit from Response
+    //    - maybe its a bad idea to make a contract class dependent of some other classes (or contracts)
     public class PagedResponse<T>
     {
         public IEnumerable<T> Data { get; set; }
@@ -15,6 +17,7 @@ namespace homepageBackend.Contracts.V1.Responses
         public string PreviousPage { get; set; }
         
 
+        // default ctor since our sdk needs it
         public PagedResponse()
         {
             

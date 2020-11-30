@@ -11,10 +11,12 @@ namespace homepageBackend.Services
     public class ProjectService : IProjectService
     {
         private readonly DataContext _dataContext;
+        private readonly ITagService _tagService;
 
-        public ProjectService(DataContext dataContext)
+        public ProjectService(DataContext dataContext, ITagService tagService)
         {
             _dataContext = dataContext;
+            _tagService = tagService;
         }
 
         public async Task<List<Project>> GetProjectsAsync(GetAllProjectsFilter filter = null, PaginationFilter paginationFilter = null)
@@ -77,7 +79,7 @@ namespace homepageBackend.Services
             return deleted > 0;
         }
 
-        public async Task<bool> UserOwnsPostAsync(Guid projectId, string userId)
+        public async Task<bool> UserOwnsProjectAsync(Guid projectId, string userId)
         {
             var project = await _dataContext.Projects.AsNoTracking().SingleOrDefaultAsync(a => a.Id == projectId);
 
@@ -92,42 +94,6 @@ namespace homepageBackend.Services
             }
 
             return true;
-        }
-
-        public async Task<List<Tag>> GetAllTagsAsync()
-        {
-            return await _dataContext.Tags.AsNoTracking().ToListAsync();
-        }
-
-        public async Task<Tag> GetTagByNameAsync(string tagName)
-        {
-            return await _dataContext.Tags.AsNoTracking().SingleOrDefaultAsync(x => x.Name == tagName.ToLower());
-        }
-
-        public async Task<bool> CreateTagAsync(Tag tag)
-        {
-            tag.Name = tag.Name.ToLower();
-            var existingTag = await _dataContext.Tags.AsNoTracking().SingleOrDefaultAsync(x => x.Name == tag.Name);
-            if (existingTag != null)
-                return true;
-
-            await _dataContext.Tags.AddAsync(tag);
-            var created = await _dataContext.SaveChangesAsync();
-            return created > 0;
-        }
-
-        public async Task<bool> DeleteTagAsync(string tagName)
-        {
-            var tag = await _dataContext.Tags.AsNoTracking().SingleOrDefaultAsync(x => x.Name == tagName.ToLower());
-
-            if (tag == null)
-                return true;
-
-            var postTags = await _dataContext.ProjectTags.Where(x => x.TagName == tagName.ToLower()).ToListAsync();
-
-            _dataContext.ProjectTags.RemoveRange(postTags);
-            _dataContext.Tags.Remove(tag);
-            return await _dataContext.SaveChangesAsync() > postTags.Count;
         }
 
         private async Task AddNewTags(Project post)

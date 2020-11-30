@@ -18,17 +18,17 @@ namespace homepageBackend.Services
 
         public async Task<List<Document>> GetDocumentsAsync()
         { 
-            return await _dataContext.Documents.Include(a => a.Tags).ToListAsync();
+            return await _dataContext.Documents.AsNoTracking().Include(a => a.Tags).ToListAsync();
         }
 
-        public Task<Document> GetDocumentByIdAsync(Guid documentId)
+        public async Task<Document> GetDocumentByIdAsync(Guid documentId)
         {
-            throw new NotImplementedException();
+            return await _dataContext.Documents.AsNoTracking().SingleOrDefaultAsync(a => a.Id == documentId);
         }
 
         public Task<bool> CreateDocumentAsync(Document document)
         {
-            throw new NotImplementedException();
+            
         }
 
         public Task<bool> UpdateDocumentAsync(Document documentToUpdate)
