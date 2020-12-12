@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using homepageBackend.Cache;
@@ -8,6 +9,7 @@ using homepageBackend.Contracts.V1.Requests;
 using homepageBackend.Contracts.V1.Responses;
 using homepageBackend.Data.Migrations;
 using homepageBackend.Domain;
+using homepageBackend.Extensions;
 using homepageBackend.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -48,9 +50,30 @@ namespace homepageBackend.Controllers
             return Ok(new Response<DocumentResponse>(_mapper.Map<DocumentResponse>(document)));
         }
 
+        [HttpPost]
+        [Route(ApiRoutes.Documents.Create)]
         public async Task<IActionResult> Create([FromBody] CreateDocumentRequest documentRequest)
         {
-            return null;
+            var newDocumentId = Guid.NewGuid();
+            var document = new Document()
+            {
+                Id = newDocumentId,
+                Name = documentRequest.Name,
+                Topic = documentRequest.Topic,
+                UserId = HttpContext.GetUserId(),
+                
+                Description = documentRequest.Description,
+                Link = documentRequest.Link,
+                Tags = documentRequest.Tags.Select(a => new DocumentTag()
+                {
+                    DocumentId = newDocumentId,
+                    TagName = a
+                }).ToList(),
+            };
+
+            await _documentService.CreateDocumentAsync(document);
+            var locationUri = _uriService.GetDocumentUri(document.Id.ToString());
+            return Created(locationUri, new Response<DocumentResponse>(_mapper.Map<DocumentResponse>(document)));
         }
     }
 }

@@ -8,13 +8,15 @@ namespace homepageBackend.Domain
 {
     public class Tag
     {
-        [Key] public string Name { get; set; }
+        [Key]
+        public string Name { get; set; }
+        
+        public DateTime CreatedOn { get; set; }
 
         public string CreatorId { get; set; }
         
-        public DateTime CreatedOn { get; set; }
-        
-        [ForeignKey(nameof(CreatorId))] public ApplicationUser CreatedBy { get; set; }
+        [ForeignKey(nameof(CreatorId))]
+        public ApplicationUser CreatedBy { get; set; }
 
         public virtual List<ProjectTag> Projects { get; set; }
         

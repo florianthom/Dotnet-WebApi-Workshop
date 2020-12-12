@@ -8,5 +8,9 @@ namespace homepageBackend.Services
         Uri GetProjectUri(string projectId);
 
         Uri GetAllProjectsUri(PaginationQuery pagination = null);
+        
+        Uri GetDocumentUri(string documentId);
+
+        Uri GetAllDocumentsUri(PaginationQuery pagination = null);
     }
 }

@@ -32,5 +32,24 @@ namespace homepageBackend.Services
             modifiedUri = QueryHelpers.AddQueryString(modifiedUri, "pageSize", pagination.PageSize.ToString());
             return new Uri(modifiedUri);
         }
+
+        public Uri GetDocumentUri(string documentId)
+        {
+            return new Uri(_baseUri + ApiRoutes.Documents.Get.Replace("{documentId}", documentId));
+        }
+
+        public Uri GetAllDocumentsUri(PaginationQuery pagination = null)
+        {
+            var uri = new Uri(_baseUri);
+
+            if (pagination == null)
+            {
+                return uri;
+            }
+
+            var modifiedUri = QueryHelpers.AddQueryString(_baseUri, "pageNumber", pagination.PageNumber.ToString());
+            modifiedUri = QueryHelpers.AddQueryString(modifiedUri, "pageSize", pagination.PageSize.ToString());
+            return new Uri(modifiedUri);
+        }
     }
 }

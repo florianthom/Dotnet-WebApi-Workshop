@@ -11,10 +11,11 @@ namespace homepageBackend.Domain
 
         public string Name { get; set; }
 
+        public virtual List<ProjectTag> Tags { get; set; }
+        
         public string UserId { get; set; }
 
-        [ForeignKey(nameof(UserId))] public ApplicationUser User { get; set; }
-
-        public virtual List<ProjectTag> Tags { get; set; }
+        [ForeignKey(nameof(UserId))]
+        public ApplicationUser User { get; set; }
     }
 }

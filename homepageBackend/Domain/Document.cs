@@ -17,22 +17,21 @@ namespace homepageBackend.Domain
         public string Topic { get; set; }
 
         public string Link { get; set; }
-        
+
         public virtual List<DocumentTag> Tags { get; set; }
+
+        public string UserId { get; set; }
+
+        [ForeignKey(nameof(UserId))]
+        public ApplicationUser User { get; set; }
 
 
         public DateTime CreatedOn { get; set; }
 
         public string CreatorId { get; set; }
 
-        [ForeignKey(nameof(CreatorId))]
-        public ApplicationUser CreatedBy { get; set; }
-        
         public DateTime UpdatedOn { get; set; }
-        
+
         public string UpdaterId { get; set; }
-        
-        [ForeignKey(nameof(UpdaterId))]
-        public ApplicationUser UpdatedBy { get; set; }
     }
 }
