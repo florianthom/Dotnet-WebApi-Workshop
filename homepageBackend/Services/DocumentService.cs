@@ -23,7 +23,7 @@ namespace homepageBackend.Services
 
         public async Task<Document> GetDocumentByIdAsync(Guid documentId)
         {
-            return await _dataContext.Documents.SingleOrDefaultAsync(a => a.Id == documentId);
+            return await _dataContext.Documents.Include(a => a.Tags).SingleOrDefaultAsync(b => b.Id == documentId);
         }
 
         public async Task<bool> CreateDocumentAsync(Document document)

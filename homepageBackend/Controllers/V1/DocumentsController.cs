@@ -11,10 +11,12 @@ using homepageBackend.Data.Migrations;
 using homepageBackend.Domain;
 using homepageBackend.Extensions;
 using homepageBackend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace homepageBackend.Controllers
 {
+    [Authorize]
     public class DocumentController : Controller
     {
         private readonly IDocumentService _documentService;
@@ -75,5 +77,39 @@ namespace homepageBackend.Controllers
             var locationUri = _uriService.GetDocumentUri(document.Id.ToString());
             return Created(locationUri, new Response<DocumentResponse>(_mapper.Map<DocumentResponse>(document)));
         }
+
+        [HttpPut]
+        [Route(ApiRoutes.Documents.Update)]
+        public async Task<IActionResult> Update([FromRoute] Guid documentId, [FromBody] UpdateDocumentRequest documentRequest)
+        {
+            bool userOwnsDocument = await _documentService.UserOwnsDocumentAsync(documentId, HttpContext.GetUserId());
+
+            if (!userOwnsDocument)
+            {
+                return BadRequest(error: "You dont own this document");
+            }
+
+            Document document = await _documentService.GetDocumentByIdAsync(documentId);
+            
+            document.Name = documentRequest.Name;
+            document.Description = documentRequest.Description;
+            document.Topic = documentRequest.Topic;
+            document.Link = documentRequest.Link;
+            
+            
+            bool updated = await _documentService.UpdateDocumentAsync(document);
+
+            if (updated)
+            {
+                return Ok(new Response<DocumentResponse>(_mapper.Map<DocumentResponse>(document)));
+            }
+
+            return NotFound();
+
+        }
+
+
+        
+        
     }
 }

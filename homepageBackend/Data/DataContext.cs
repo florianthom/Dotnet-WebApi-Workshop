@@ -26,8 +26,8 @@ namespace homepageBackend.Data
 
         public DbSet<ProjectTag> ProjectTags { get; set; }
         
-        public DbSet<ProjectTag> DocumentTags { get; set; }
-
+        public DbSet<DocumentTag> DocumentTags { get; set; }
+        
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options)
