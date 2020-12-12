@@ -94,7 +94,7 @@ namespace homepageBackend.Services
 
         public async Task<bool> UserOwnsDocumentAsync(Guid documentId, string userId)
         {
-            var project = await _dataContext.Projects.AsNoTracking().SingleOrDefaultAsync(a => a.Id == documentId);
+            var project = await _dataContext.Documents.AsNoTracking().SingleOrDefaultAsync(a => a.Id == documentId);
 
             if (project == null)
             {

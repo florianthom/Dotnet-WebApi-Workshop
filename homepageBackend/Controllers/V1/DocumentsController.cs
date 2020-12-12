@@ -108,7 +108,26 @@ namespace homepageBackend.Controllers
 
         }
 
+        [HttpDelete]
+        [Route(ApiRoutes.Documents.Delete)]
+        public async Task<IActionResult> Delete(Guid documentId)
+        {
+            bool userOwnsDocument = await _documentService.UserOwnsDocumentAsync(documentId, HttpContext.GetUserId());
 
+            if (!userOwnsDocument)
+            {
+                return BadRequest(error: "You dont own this document");
+            }
+
+            bool deleted = await _documentService.DeleteDocumentAsync(documentId);
+
+            if (deleted)
+            {
+                return NoContent();
+            }
+
+            return NotFound();
+        }
         
         
     }
