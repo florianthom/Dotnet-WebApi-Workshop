@@ -6,21 +6,13 @@ using Microsoft.AspNetCore.Identity;
 
 namespace homepageBackend.Domain
 {
-    public class Tag
+    public class Tag : AuditableEntity
     {
         [Key]
         public string Name { get; set; }
         
-        public DateTime CreatedOn { get; set; }
-
-        public string CreatorId { get; set; }
-        
-        [ForeignKey(nameof(CreatorId))]
-        public ApplicationUser CreatedBy { get; set; }
-
         public virtual List<ProjectTag> Projects { get; set; }
         
         public virtual List<DocumentTag> Documents { get; set; }
-
     }
 }

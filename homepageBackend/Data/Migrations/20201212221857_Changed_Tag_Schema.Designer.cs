@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using homepageBackend.Data;
@@ -9,9 +10,10 @@ using homepageBackend.Data;
 namespace homepageBackend.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20201212221857_Changed_Tag_Schema")]
+    partial class Changed_Tag_Schema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -240,7 +242,7 @@ namespace homepageBackend.Data.Migrations
                     b.Property<string>("Topic")
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("UpdatedOn")
+                    b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("UpdaterId")
@@ -286,7 +288,7 @@ namespace homepageBackend.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("UpdatedOn")
+                    b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("UpdaterId")
@@ -359,7 +361,7 @@ namespace homepageBackend.Data.Migrations
                     b.Property<string>("CreatorId")
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("UpdatedOn")
+                    b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("UpdaterId")

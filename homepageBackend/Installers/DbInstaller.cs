@@ -13,6 +13,14 @@ namespace homepageBackend.Installers
     {
         public static void InstallDb(this IServiceCollection services, IConfiguration Configuration)
         {
+            
+            services.AddHttpContextAccessor();
+
+            services.AddSingleton<ICurrentUserService, CurrentUserService>();
+            
+            services.AddTransient<IDateTime, DateTimeService>();
+            
+            
             services.AddDbContext<DataContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("homepageBackendContextPostgre")));
 

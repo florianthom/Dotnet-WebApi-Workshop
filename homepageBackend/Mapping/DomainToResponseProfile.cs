@@ -22,7 +22,11 @@ namespace homepageBackend.Mapping
                 .ForMember(a => a.Tags, b =>
                     b.MapFrom(src => src.Tags.Select(d => new TagResponse()
                     {
-                        Name = d.TagName
+                        Name = d.TagName,
+                        CreatedOn = d.Tag.CreatedOn,
+                        CreatorId = d.Tag.CreatorId,
+                        UpdatedOn = d.Tag.UpdatedOn,
+                        UpdaterId = d.Tag.UpdaterId
                     })));
         }
     }

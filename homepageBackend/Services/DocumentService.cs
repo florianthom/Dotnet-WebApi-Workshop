@@ -18,37 +18,21 @@ namespace homepageBackend.Services
 
         public async Task<List<Document>> GetDocumentsAsync()
         { 
-            return await _dataContext.Documents.AsNoTracking().Include(a => a.Tags).ToListAsync();
+            return await _dataContext.Documents.AsNoTracking().Include(a => a.Tags).ThenInclude(b => b.Tag).ToListAsync();
         }
 
         public async Task<Document> GetDocumentByIdAsync(Guid documentId)
         {
-            return await _dataContext.Documents.Include(a => a.Tags).SingleOrDefaultAsync(b => b.Id == documentId);
+            return await _dataContext.Documents.Include(a => a.Tags).ThenInclude(b => b.Tag).SingleOrDefaultAsync(b => b.Id == documentId);
         }
 
         public async Task<bool> CreateDocumentAsync(Document document)
         {
             document.Tags.ForEach(a => a.TagName = a.TagName.ToString());
-            await AddNewTag(document);
+            await AddNewTags(document);
             await _dataContext.Documents.AddAsync(document);
             var created = await _dataContext.SaveChangesAsync();
             return created > 0;
-        }
-
-        private async Task AddNewTag(Document document)
-        {
-
-                foreach (var tag in document.Tags)
-                {
-                    var existingTag =
-                        await _dataContext.Tags.SingleOrDefaultAsync(x =>
-                            x.Name == tag.TagName);
-                    if (existingTag != null)
-                        continue;
-
-                    await _dataContext.Tags.AddAsync(new Tag
-                        {Name = tag.TagName, CreatedOn = DateTime.UtcNow, CreatorId = document.UserId});
-                }
         }
 
         public async Task<bool> UpdateDocumentAsync(Document documentToUpdate)
@@ -72,9 +56,7 @@ namespace homepageBackend.Services
                 
                 await _dataContext.Tags.AddAsync(new Tag()
                 {
-                    Name = tag.TagName,
-                    CreatedOn = DateTime.UtcNow,
-                    CreatorId = document.UserId
+                    Name = tag.TagName
                 });
             }
         }

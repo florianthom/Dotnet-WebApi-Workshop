@@ -90,7 +90,7 @@ namespace homepageBackend.Installers
             services.AddSingleton<IUriService>(provider =>
             {
                 var request = provider.GetRequiredService<IHttpContextAccessor>()
-                    .HttpContext
+                    .HttpContext?
                     .Request;
                 var absoluteUri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent(), "/");
                 return new UriService(absoluteUri);

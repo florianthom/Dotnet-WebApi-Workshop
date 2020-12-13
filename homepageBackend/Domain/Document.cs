@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace homepageBackend.Domain
 {
-    public class Document
+    public class Document : AuditableEntity
     {
         [Key]
         public Guid Id { get; set; }
@@ -24,14 +24,5 @@ namespace homepageBackend.Domain
 
         [ForeignKey(nameof(UserId))]
         public ApplicationUser User { get; set; }
-
-
-        public DateTime CreatedOn { get; set; }
-
-        public string CreatorId { get; set; }
-
-        public DateTime UpdatedOn { get; set; }
-
-        public string UpdaterId { get; set; }
     }
 }

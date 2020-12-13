@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace homepageBackend.Controllers
 {
     // {
-    // "email": "test@test.com",
+    // "email": "test2@test.com",
     // "password": "Test1234!!"
     // }
     public class IdentityController : Controller
@@ -21,34 +21,34 @@ namespace homepageBackend.Controllers
             _identityService = identityService;
         }
 
-        [HttpPost]
-        [Route(ApiRoutes.Identity.Register)]
-        public async Task<IActionResult> Register([FromBody] UserRegistrationRequest userRegistrationRequest)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new AuthFailedResponse
-                {
-                    Errors = ModelState.Values.SelectMany(a => a.Errors.Select(b => b.ErrorMessage))
-                });
-            }
-            var authResponse =
-                await _identityService.RegisterAsync(userRegistrationRequest.Email, userRegistrationRequest.Password);
-
-            if (!authResponse.Success)
-            {
-                return BadRequest(new AuthFailedResponse
-                {
-                    Errors = authResponse.Errors
-                });
-            }
-            
-            return Ok(new AuthSuccessResponse
-            {
-                Token = authResponse.Token,
-                RefreshToken = authResponse.RefreshToken
-            });
-        }
+        // [HttpPost]
+        // [Route(ApiRoutes.Identity.Register)]
+        // public async Task<IActionResult> Register([FromBody] UserRegistrationRequest userRegistrationRequest)
+        // {
+        //     if (!ModelState.IsValid)
+        //     {
+        //         return BadRequest(new AuthFailedResponse
+        //         {
+        //             Errors = ModelState.Values.SelectMany(a => a.Errors.Select(b => b.ErrorMessage))
+        //         });
+        //     }
+        //     var authResponse =
+        //         await _identityService.RegisterAsync(userRegistrationRequest.Email, userRegistrationRequest.Password);
+        //
+        //     if (!authResponse.Success)
+        //     {
+        //         return BadRequest(new AuthFailedResponse
+        //         {
+        //             Errors = authResponse.Errors
+        //         });
+        //     }
+        //     
+        //     return Ok(new AuthSuccessResponse
+        //     {
+        //         Token = authResponse.Token,
+        //         RefreshToken = authResponse.RefreshToken
+        //     });
+        // }
         
         [HttpPost]
         [Route(ApiRoutes.Identity.Login)]

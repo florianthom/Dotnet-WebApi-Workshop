@@ -1,11 +1,9 @@
 ﻿using System;
 
-namespace homepageBackend.Contracts.V1.Responses
+namespace homepageBackend.Domain
 {
-    public class TagResponse
+    public class AuditableEntity
     {
-        public string Name { get; set; }
-        
         public DateTime CreatedOn { get; set; }
 
         public string CreatorId { get; set; }
