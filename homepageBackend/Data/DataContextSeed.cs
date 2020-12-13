@@ -1,28 +1,36 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using homepageBackend.Domain;
+using homepageBackend.Options;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 
 namespace homepageBackend.Data
 {
     public static class DataContextSeed
     {
         public static async Task SeedDefaultUserAsync(UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager, IConfiguration config)
         {
-            var administratorRole = new IdentityRole("Administrator");
+            var seedAdminProfile = new SeedAdminProfile();
+            config.Bind(nameof(seedAdminProfile), seedAdminProfile);            
+            
+            var administratorRole = new IdentityRole(seedAdminProfile.IdentityRoleName);
 
             if (roleManager.Roles.All(r => r.Name != administratorRole.Name))
             {
                 await roleManager.CreateAsync(administratorRole);
             }
 
-            var administrator = new ApplicationUser
-                {UserName = "administrator@localhost", Email = "administrator@localhost"};
-
-            if (userManager.Users.All(u => u.UserName != administrator.UserName))
+            var administrator = new ApplicationUser()
             {
-                await userManager.CreateAsync(administrator, "Administrator1!");
+                Email = seedAdminProfile.Email,
+                UserName = seedAdminProfile.Email
+            };
+
+            if (userManager.Users.All(u => u.Email != administrator.Email))
+            {
+                await userManager.CreateAsync(administrator, seedAdminProfile.Password);
                 await userManager.AddToRolesAsync(administrator, new[] {administratorRole.Name});
             }
         }
