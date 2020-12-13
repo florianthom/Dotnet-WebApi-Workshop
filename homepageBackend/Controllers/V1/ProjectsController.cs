@@ -71,7 +71,6 @@ namespace homepageBackend.Controllers
 
         [HttpPut]
         [Route(ApiRoutes.Projects.Update)]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update([FromRoute] Guid projectId, [FromBody] UpdateProjectRequest request)
         {
             var userOwnsProject = await _projectService.UserOwnsProjectAsync(projectId, HttpContext.GetUserId());
@@ -94,8 +93,8 @@ namespace homepageBackend.Controllers
 
         [HttpDelete]
         [Route(ApiRoutes.Projects.Delete)]
-        [Authorize(Roles = "Admin")]
-        [Authorize(Policy = "MustWorkForDotCom")]
+        // [Authorize(Roles = "Admin")]
+        // [Authorize(Policy = "MustWorkForDotCom")]
         public async Task<IActionResult> Delete([FromRoute] Guid projectId)
         {
             var userOwnsProject = await _projectService.UserOwnsProjectAsync(projectId, HttpContext.GetUserId());
