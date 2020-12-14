@@ -27,7 +27,6 @@ namespace homepageBackend
         // This method gets called by the runtime. Use this method to add services to the IoC-container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.InstallDb(Configuration);
 
             services.InstallMvc(Configuration);
@@ -45,8 +44,15 @@ namespace homepageBackend
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
-            
-            app.UseDeveloperExceptionPage();
+
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                // app.UseExceptionHandler();
+            }
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "homepageBackend v1"));
                 

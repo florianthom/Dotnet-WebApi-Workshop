@@ -8,6 +8,7 @@ using homepageBackend.Contracts.V1;
 using homepageBackend.Contracts.V1.Requests;
 using homepageBackend.Contracts.V1.Responses;
 using homepageBackend.Data;
+using homepageBackend.Domain;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,7 +22,7 @@ namespace homepageBackend.IntegrationTests
     public class IntegrationTest : IDisposable
     {
         // to get secrets -> we need  adminprofile
-        protected readonly IConfiguration _configuration;
+        // protected readonly IConfiguration _configuration;
         
         
         // attribute since maybe this factory needs additional configuration
@@ -53,10 +54,10 @@ namespace homepageBackend.IntegrationTests
         // https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-5.0
         protected IntegrationTest()
         {
-            var builder = new ConfigurationBuilder().AddUserSecrets<homepageBackend.Startup>();
-            _configuration = builder.Build();
+            // var builder = new ConfigurationBuilder().AddUserSecrets<homepageBackend.Startup>();
+            // _configuration = builder.Build();
 
-            AppFactory = new InMemoryWebApplicationFactory<homepageBackend.Startup>(_configuration);
+            AppFactory = new InMemoryWebApplicationFactory<homepageBackend.Startup>();
             TestClient = AppFactory.CreateClient();
         }
 
@@ -68,11 +69,10 @@ namespace homepageBackend.IntegrationTests
 
         private async Task<string> GetJwtAsync()
         {
-            var test = _configuration["SeedAdminProfile:Email"];
             var response = await TestClient.PostAsJsonAsync(ApiRoutes.Identity.Login, new UserLoginRequest()
             {
-                Email = _configuration["SeedAdminProfile:Email"],
-                Password = _configuration["SeedAdminProfile:Password"]
+                Email = "iamthemockadmin@iamthemockadmin.iamthemockadmin",
+                Password = "AdminTestUserPW1234!!"
             });
             
             

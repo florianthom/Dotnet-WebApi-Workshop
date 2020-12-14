@@ -15,11 +15,11 @@ namespace homepageBackend.IntegrationTests
 {
     public class InMemoryWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
     {
-        private readonly IConfiguration _configuration;
+        // private readonly IConfiguration _configuration;
 
-        public InMemoryWebApplicationFactory(IConfiguration configuration)
+        public InMemoryWebApplicationFactory()
         {
-            _configuration = configuration;
+            
         }
         
         protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -54,7 +54,7 @@ namespace homepageBackend.IntegrationTests
                     try
                     {
                         // optionally seed database here
-                        await Utilities.InitializeDbForTests(db, _configuration, userManager, roleManager);
+                        await Utilities.InitializeDbForTests(db, userManager, roleManager);
                     }
                     catch (Exception ex)
                     {
