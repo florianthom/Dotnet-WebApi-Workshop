@@ -10,6 +10,7 @@ using homepageBackend.Contracts.V1.Responses;
 using homepageBackend.Data;
 using homepageBackend.Domain;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

@@ -6,6 +6,7 @@ using homepageBackend.IntegrationTests.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +25,11 @@ namespace homepageBackend.IntegrationTests
         
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            // if not specified it is not defined but it runs the TestClient like it is runned in production
+            //    (= no dependency on secret-manager -> it reads the environment variables -> thats why i think it runs
+            //     like it is in production)
+            // builder.UseEnvironment("Production");
+            
             // is like Startup-ConfigureServices-Method
             // this builder.ConfigureServices-Method is called AFTER the startups-configureServices-Method
             // because of this we can replace the apps database context here (e.g. with an inmemory one)

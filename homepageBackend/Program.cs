@@ -20,7 +20,7 @@ namespace homepageBackend
     // local_file_path: C:\Users\Florian\AppData\Roaming\Microsoft\UserSecrets\01d49ea2-0701-4783-8ef5-6471a1c32caa\secrets.json
     public class Program
     {
-        // dotnet run watch
+        // dotnet run --launch-settings "dev"
         //
         // docker build -t homepagebackend .
         // docker run -p 5000:5000 homepagebackend
