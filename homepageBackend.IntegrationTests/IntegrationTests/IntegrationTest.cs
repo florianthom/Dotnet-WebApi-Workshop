@@ -10,6 +10,7 @@ using homepageBackend.Contracts.V1.Responses;
 using homepageBackend.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -19,6 +20,10 @@ namespace homepageBackend.IntegrationTests
     // https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-5.0
     public class IntegrationTest : IDisposable
     {
+        // to get secrets -> we need  adminprofile
+        protected readonly IConfiguration _configuration;
+        
+        
         // attribute since maybe this factory needs additional configuration
         // e.g. init data
         //    - in that case you have to adjust the IWebHostBuilder inside the e.g. InMemoryWebApplicationFactory
@@ -48,7 +53,10 @@ namespace homepageBackend.IntegrationTests
         // https://docs.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-5.0
         protected IntegrationTest()
         {
-            AppFactory = new InMemoryWebApplicationFactory<homepageBackend.Startup>();
+            var builder = new ConfigurationBuilder().AddUserSecrets<homepageBackend.Startup>();
+            _configuration = builder.Build();
+
+            AppFactory = new InMemoryWebApplicationFactory<homepageBackend.Startup>(_configuration);
             TestClient = AppFactory.CreateClient();
         }
 
@@ -60,14 +68,16 @@ namespace homepageBackend.IntegrationTests
 
         private async Task<string> GetJwtAsync()
         {
-            var response = await TestClient.PostAsJsonAsync(ApiRoutes.Identity.Register, new UserRegistrationRequest
+            var test = _configuration["SeedAdminProfile:Email"];
+            var response = await TestClient.PostAsJsonAsync(ApiRoutes.Identity.Login, new UserLoginRequest()
             {
-                Email = "test@test.com",
-                Password = "Florian1234!!"
+                Email = _configuration["SeedAdminProfile:Email"],
+                Password = _configuration["SeedAdminProfile:Password"]
             });
-
-            var registrationResponse = await response.Content.ReadFromJsonAsync<AuthSuccessResponse>();
-            return registrationResponse.Token;
+            
+            
+            var loginResponse = await response.Content.ReadFromJsonAsync<AuthSuccessResponse>();
+            return loginResponse.Token;
         }
 
         protected async Task<ProjectResponse> CreateProjectAsync(CreateProjectRequest request)

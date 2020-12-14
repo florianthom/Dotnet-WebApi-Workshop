@@ -1,23 +1,33 @@
 ﻿using System;
 using System.Linq;
 using homepageBackend.Data;
+using homepageBackend.Domain;
+using homepageBackend.IntegrationTests.Helpers;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace homepageBackend.IntegrationTests
 {
-    public class InMemoryWebApplicationFactory<TStartup>
-        : WebApplicationFactory<TStartup> where TStartup : class
+    public class InMemoryWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
     {
+        private readonly IConfiguration _configuration;
+
+        public InMemoryWebApplicationFactory(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             // is like Startup-ConfigureServices-Method
             // this builder.ConfigureServices-Method is called AFTER the startups-configureServices-Method
             // because of this we can replace the apps database context here (e.g. with an inmemory one)
-            builder.ConfigureServices(services =>
+            builder.ConfigureServices(async services =>
             {
                 var descriptor = services.SingleOrDefault(
                     d => d.ServiceType ==
@@ -36,13 +46,15 @@ namespace homepageBackend.IntegrationTests
                     var db = scopedServices.GetRequiredService<DataContext>();
                     var logger = scopedServices
                         .GetRequiredService<ILogger<InMemoryWebApplicationFactory<TStartup>>>();
-
+                    var userManager = scopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+                    var roleManager = scopedServices.GetRequiredService<RoleManager<IdentityRole>>();
+                    
                     db.Database.EnsureCreated();
 
                     try
                     {
                         // optionally seed database here
-                        // Utilities.InitializeDbForTests(db);
+                        await Utilities.InitializeDbForTests(db, _configuration, userManager, roleManager);
                     }
                     catch (Exception ex)
                     {
