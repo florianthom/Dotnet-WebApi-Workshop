@@ -1,7 +1,7 @@
 # dotnet5BackendProject
 Personal project to create a .net 5 web-api backed by entity-framework.
 
-##Learned
+## Learned
  - Basics of general asp.net core application development
  - Basics of general sdk development for a web-api
 
@@ -42,7 +42,7 @@ Personal project to create a .net 5 web-api backed by entity-framework.
  - Run application
  
  ```
-   $ dotnet run --project .\homepageBackend
+   $ dotnet run --project .\dotnet5BackendProject
  ```
 
  - Open swagger
