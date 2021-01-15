@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net5.0</TargetFramework>
+        <RootNamespace>dotnet5BackendProject.SdkSample</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\dotnet5BackendProject.Sdk\dotnet5BackendProject.Sdk.csproj" />
+    </ItemGroup>
+
+</Project>
