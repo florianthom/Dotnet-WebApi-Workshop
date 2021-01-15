@@ -1,4 +1,4 @@
-# homepageBackend
+# dotnet5BackendProject
 Personal project to create a .net 5 web-api backed by entity-framework.
 
 ##Learned
@@ -24,13 +24,13 @@ Personal project to create a .net 5 web-api backed by entity-framework.
  - Clone the repository
 
  ```
-    $ git clone git@github.com:FlorianTh2/dotnet5BackendExample.git`
+    $ git clone git@github.com:FlorianTh2/dotnet5BackendProject.git`
  ```
 
  - Switch to directory
  
  ```
-    $ cd ./dotnet5BackendExample
+    $ cd ./dotnet5BackendProject
  ```
 
  - Install of all dependencies
