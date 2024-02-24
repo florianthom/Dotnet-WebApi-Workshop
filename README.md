@@ -1,5 +1,5 @@
-# dotnet5BackendProject
-Personal project to create a .net 5 web-api backed by entity-framework.
+# Dotnet: WebApi-Workshop
+Dotnet-WebApi-Workshop: Bootstrap a basic backend in .net 5 with entity framework.
 
 ## Learned
  - Basics of general asp.net core application development
